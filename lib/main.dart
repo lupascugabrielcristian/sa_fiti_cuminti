@@ -128,46 +128,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: PageWidget(eticheta: eticheta))
               ),
 
-              // Column(
-              //   children: [
-              //     // AUTOR
-              //     Row( children: [ Text('Autor: ', style: TextStyle(fontSize: 18),),
-              //       Expanded(child: TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),))
-              //       , ], ),
-              //
-              //     // TITLU
-              //     Row( children: [ Text('Nume: ', style: TextStyle(fontSize: 18),),
-              //       Expanded(child: TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),))
-              //       , ], ),
-              //
-              //     // MARIME
-              //     Row( children: [ Text('Marime: ', style: TextStyle(fontSize: 18),),
-              //       Expanded(child: TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),))
-              //       , ], ),
-              //
-              //   ],
-              // ),
-
-              // Container(
-              //   color: Colors.red,
-              //   width: 300,
-              //   height: 200,
-              //   child: Row(
-              //     children: [
-              //       Column(
-              //         children: [
-              //           // Descriere
-              //           TextField(
-              //             maxLines: 10, //or null
-              //             decoration: InputDecoration.collapsed(hintText: "Enter your text here"),
-              //           ),
-              //         ],
-              //       )
-              //     ],
-              //   ),
-              // ),
-              // Spacer(),
-
             ],
           ),
 
