@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sa_fiti_cuminti/form.dart';
 
-class PageWidget extends StatelessWidget {
-  const PageWidget({super.key, required this.eticheta});
+class EtichetaWidget extends StatelessWidget {
+  const EtichetaWidget({super.key, required this.eticheta});
 
   final Eticheta eticheta;
 
@@ -10,7 +10,8 @@ class PageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 1.0),
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(width: 1.0, color: Colors.black26),
       ),
       
       
@@ -50,7 +51,7 @@ class PageWidget extends StatelessWidget {
           ),
 
           Container(
-            // margin: EdgeInsets.symmetric(horizontal: 20),
+            margin: EdgeInsets.only(right: 20),
             height: 300,
             width: 1,
             color: Colors.black26,
@@ -60,9 +61,7 @@ class PageWidget extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Container(
-                margin: EdgeInsets.only(left: 20),
-                  child: Flexible(child: Text(eticheta.description, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w200),))),
+              child: Flexible(child: Text(eticheta.description, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w200),)),
             ),
           ),
         ],

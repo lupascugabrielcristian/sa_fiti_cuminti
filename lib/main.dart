@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:sa_fiti_cuminti/form.dart';
-import 'package:sa_fiti_cuminti/page.dart';
 import 'package:sa_fiti_cuminti/pdf_service.dart';
+
+import 'eticheta_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       description: '''S fi icumin i implic art live, expozi ii, galerie i street art. Mult diversitate, energie creativ i drive social. Vrem s provoc m societatea s î i trezeasc în fiecare zi la via creativitatea; i ce alt mod mai bun de a face asta, dac nu prin produsele care ne îmbrac i arta care ne înconjoar ?''');
 
   void _generatePdf() {
-    pdfService.generate();
+    pdfService.generate(eticheta);
   }
 
   @override
@@ -86,72 +86,78 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
 
-              Container(
-                width: 300,
-                child: Column(
-                  // AUTOR
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SizedBox(
+                    width: 300,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // AUTOR
+                        Text('Autor: ', style: TextStyle(fontSize: 18),),
+                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
+
+                        SizedBox(height: 20,),
+
+                        // TITLU
+                        Text('Titlu: ', style: TextStyle(fontSize: 18),),
+                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
+
+                        SizedBox(height: 20,),
+
+                        // MARIME
+                        Text('Marime: ', style: TextStyle(fontSize: 18),),
+                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
+
+                        SizedBox(height: 20,),
+
+                        // AN
+                        Text('An: ', style: TextStyle(fontSize: 18),),
+                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
+                      ],
+                    )),
+                ),
+
+                Expanded(
+                  child: Container(
+                    color: Color.fromARGB(205, 238, 238, 208),
+                    child: EtichetaWidget(eticheta: eticheta))
+                ),
+
+              ],
+            ),
+
+            GestureDetector(
+              onTap: () {
+                _generatePdf();
+              },
+              child: Container(
+                margin: EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: Colors.purple[200],
+                  borderRadius: const BorderRadius.all(Radius.circular(20) ),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // AUTOR
-                    Text('Autor: ', style: TextStyle(fontSize: 18),),
-                    TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
-
-                    SizedBox(height: 20,),
-
-                    // TITLU
-                    Text('Titlu: ', style: TextStyle(fontSize: 18),),
-                    TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
-
-                    SizedBox(height: 20,),
-
-                    // MARIME
-                    Text('Marime: ', style: TextStyle(fontSize: 18),),
-                    TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
-
-                    SizedBox(height: 20,),
-
-                    // AN
-                    Text('An: ', style: TextStyle(fontSize: 18),),
-                    TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
+                    Text('Genereaza', style: TextStyle(color: Colors.white),),
                   ],
-                )),
-
-              Expanded(
-                child: Container(
-                  color: Colors.blue,
-                  child: PageWidget(eticheta: eticheta))
-              ),
-
-            ],
-          ),
-
-          GestureDetector(
-            onTap: () {
-              _generatePdf();
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.purple[200],
-                borderRadius: const BorderRadius.all(Radius.circular(20) ),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
-              child: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Genereaza', style: TextStyle(color: Colors.white),),
-                ],
+                ),
               ),
             ),
-          ),
 
-          SizedBox(height: 20,),
-        ],
+            SizedBox(height: 20,),
+          ],
+        ),
       ),
     );
   }
