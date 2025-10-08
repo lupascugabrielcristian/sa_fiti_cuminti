@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sa_fiti_cuminti/form.dart';
 import 'package:sa_fiti_cuminti/pdf_service.dart';
+import 'package:sa_fiti_cuminti/pdf_syncfusion_service.dart';
 
 import 'eticheta_widget.dart';
 
@@ -59,13 +60,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final pdfService = PdfService();
-  Eticheta eticheta = Eticheta(autor: "Adi popescu",
+  Eticheta eticheta = Eticheta(autor: "Adi Piorescu",
       titlu: 'I sealed myself to find me later',
       marime: '150 X 28 cm',
       description: '''S fi icumin i implic art live, expozi ii, galerie i street art. Mult diversitate, energie creativ i drive social. Vrem s provoc m societatea s î i trezeasc în fiecare zi la via creativitatea; i ce alt mod mai bun de a face asta, dac nu prin produsele care ne îmbrac i arta care ne înconjoar ?''');
 
   void _generatePdf() {
-    pdfService.generatePage(eticheta);
+    // pdfService.generatePage(eticheta);
+    PdfSyncfusionService().generatePage(eticheta);
   }
 
   @override

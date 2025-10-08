@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:sa_fiti_cuminti/form.dart';
@@ -58,7 +60,7 @@ class EtichetaWidget extends StatelessWidget {
                         height: 90,
                         width: 90,
                         child: PrettyQrView(
-                          qrImage: QrImage(QrCode.fromData(data: "www.google.com", errorCorrectLevel: QrErrorCorrectLevel.H),),
+                          qrImage: QrImage(QrCode.fromData(data: "www.google.com ${Random().nextInt(5000)}" , errorCorrectLevel: QrErrorCorrectLevel.H),),
                           decoration: const PrettyQrDecoration(
                             background: Colors.transparent,
                             shape: const PrettyQrDotsSymbol(
@@ -87,7 +89,7 @@ class EtichetaWidget extends StatelessWidget {
                         height: 90,
                         width: 90,
                         child: PrettyQrView(
-                          qrImage: QrImage(QrCode.fromData(data: "www.google.com", errorCorrectLevel: QrErrorCorrectLevel.H),),
+                          qrImage: QrImage(QrCode.fromData(data: "www.google.com ${Random().nextInt(5000)}", errorCorrectLevel: QrErrorCorrectLevel.H),),
                           decoration: const PrettyQrDecoration(
                             background: Colors.transparent,
                             shape: const PrettyQrDotsSymbol(

@@ -1,26 +1,29 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sa_fiti_cuminti/form.dart';
 
 class PdfService {
-  final pdf = pw.Document();
 
   void generatePage(Eticheta eticheta) async {
     final qr1Image = await _getQRCodes();
     final qr2Image = await _getQRCodes();
 
+    final img = await rootBundle.load('assets/insta.png');
+    final imageBytes = img.buffer.asUint8List();
+
     _generate(eticheta, qr1Image, qr2Image);
   }
 
-  void _generate(Eticheta eticheta, ByteData qr1, ByteData qr2) {
+  void _generate(Eticheta eticheta, Uint8List? qr1, Uint8List? qr2) {
+    final pdf = pw.Document();
+
     pdf.addPage(pw.Page(
         margin: pw.EdgeInsets.all(10),
         pageFormat: PdfPageFormat.a4,
@@ -69,34 +72,32 @@ class PdfService {
                                 color: PdfColor.fromHex("#000")
                             ),
 
-                            // QR codes
-                            pw.Row(
-                              children: [
-
-                                pw.SizedBox(
-                                  height: 150,
-                                  width: 150,
-                                  child: pw.Image(
-                                    pw.MemoryImage(
-                                        qr1.buffer.asUint8List()
-                                    )
+                            // QR codes in a row
+                            pw.Container(
+                              padding: pw.EdgeInsets.symmetric(horizontal: 20),
+                              child: pw.Row(
+                                mainAxisAlignment: pw.MainAxisAlignment.start,
+                                children: [
+                                  pw.Container(
+                                    color: PdfColors.green,
+                                    child: pw.Image(
+                                      pw.MemoryImage(qr1!),
+                                      height: 80,
+                                      width: 80,
+                                    ),
                                   ),
-                                ),
-
-                                pw.SizedBox(width: 20,),
-
-                                pw.SizedBox(
-                                  height: 150,
-                                  width: 150,
-                                  child: pw.Image(
-                                      pw.MemoryImage(
-                                          qr2.buffer.asUint8List()
-                                      )
+                                  pw.SizedBox(width: 20),
+                                  pw.Container(
+                                    color: PdfColors.blue,
+                                    child: pw.Image(
+                                      pw.MemoryImage(qr2!),
+                                      height: 80,
+                                      width: 80,
+                                    ),
                                   ),
-                                )
-                              ]
-                            )
-
+                                ],
+                              ),
+                            ),
                           ]
                       ),
                     ),
@@ -123,40 +124,40 @@ class PdfService {
           ); // Center
         })); // Page
 
-    _saveDocument();
+      _saveDocument(pdf);
+    }
+
+    void _saveDocument(pw.Document pdf) async {
+      final dir = await getApplicationDocumentsDirectory();
+      log("downloads: $dir");
+
+      final file = File('${dir.path}/safiticuminti.pdf');
+      await file.writeAsBytes(await pdf.save());
+    }
+
+    Future<Uint8List?> _getQRCodes() async {
+      // 1. Configure the QrPainter
+      final painter = QrPainter(
+        data: "https://www.instagram.ro",
+        version: QrVersions.auto,
+        gapless: false,
+        // Define the colors/styles here if needed
+        eyeStyle: const QrEyeStyle(
+          color: Color(0xFF000000), // Black
+        ),
+        dataModuleStyle: const QrDataModuleStyle(
+          color: Color(0xFFB81919),
+        )
+      );
+
+      // 2. Convert the painter to a ui.Image
+      // We use the specified size to define the final image resolution.
+      final ui.Image image = await painter.toImage(100.0);
+
+      // 3. Convert the ui.Image to raw ByteData (PNG format)
+      final ByteData? byteData = await image.toByteData(
+          format: ui.ImageByteFormat.png);
+      return byteData?.buffer.asUint8List();
+    }
   }
 
-  void _saveDocument() async {
-    final dir = await getApplicationDocumentsDirectory();
-    log("downloads: $dir");
-
-    final file = File('${dir.path}/safiticuminti.pdf');
-    await file.writeAsBytes(await pdf.save());
-  }
-
-  Future<ByteData> _getQRCodes() async {
-    final image = QrImage(QrCode.fromData(
-      data: "www.google.com",
-      errorCorrectLevel: QrErrorCorrectLevel.H)
-    );
-
-    final qrImageBytes = await image.toImageAsBytes(
-        size: 128,
-        format: ImageByteFormat.png,
-        decoration: const PrettyQrDecoration(
-          background: Colors.transparent,
-          shape: PrettyQrDotsSymbol(
-            color: Colors.black,
-          ),
-          quietZone: PrettyQrQuietZone.modules(0),
-          image: PrettyQrDecorationImage(
-            image: AssetImage('assets/insta.png'),
-            position: PrettyQrDecorationImagePosition.embedded,
-            scale: 0.3,
-          ),
-      )
-    );
-
-    return qrImageBytes!;
-  }
-}
