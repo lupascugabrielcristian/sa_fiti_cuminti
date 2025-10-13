@@ -74,27 +74,23 @@ class PdfService {
 
                             // QR codes in a row
                             pw.Container(
-                              padding: pw.EdgeInsets.symmetric(horizontal: 20),
                               child: pw.Row(
-                                mainAxisAlignment: pw.MainAxisAlignment.start,
+                                mainAxisAlignment: pw.MainAxisAlignment .spaceBetween,
                                 children: [
+                                  // pw.Text("asfasdfasd", style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.values[0])),
                                   pw.Container(
-                                    color: PdfColors.green,
-                                    child: pw.Image(
-                                      pw.MemoryImage(qr1!),
-                                      height: 80,
-                                      width: 80,
-                                    ),
+                                    width: 50,
+                                    height: 50,
+                                    // color: PdfColor.fromHex("#333333"),
+                                    child: pw.Image(pw.MemoryImage(qr1!), height: 40, width: 40),
                                   ),
-                                  pw.SizedBox(width: 20),
+
                                   pw.Container(
-                                    color: PdfColors.blue,
-                                    child: pw.Image(
-                                      pw.MemoryImage(qr2!),
-                                      height: 80,
-                                      width: 80,
-                                    ),
-                                  ),
+                                    width: 50,
+                                    height: 50,
+                                    // color: PdfColor.fromHex("#333333"),
+                                    child: pw.Image(pw.MemoryImage(qr2!), height: 40, width: 40),
+                                  )
                                 ],
                               ),
                             ),

@@ -160,20 +160,25 @@ class PdfSyncfusionService {
 
     // Draw QR code text 1
     // final qrText1pos = Coord(qr1pos.x + QR_SIZE, qr1pos.y + QR_SIZE);
-    final qrText1pos = Coord(20, 400);
-    final qrText1Size = Coord(20, QR_SIZE); // Width & Height
+    final qrText1pos = Coord(400, 220);
+    final qrText1Size = Coord(QR_SIZE, QR_SIZE); // Width & Height
     if (qr1 != null) {
-      final normalState = page.graphics.save();
-      page.graphics.translateTransform(20, 20);
-      page.graphics.rotateTransform(270);
-      page.graphics.drawString(
+      page.graphics.drawString('A',
+        syncF.PdfStandardFont(syncF.PdfFontFamily.helvetica, FONT_SIZE_2),
+        brush: syncF.PdfBrushes.black,
+        bounds: ui.Rect.fromLTWH(qrText1pos.x, qrText1pos.y, qrText1Size.x, qrText1Size.y),
+        format: syncF.PdfStringFormat(textDirection: syncF.PdfTextDirection.leftToRight),
+      );
+
+      page.graphics..rotateTransform(90)
+        ..drawString(
         'Nume QR 1',
         syncF.PdfStandardFont(syncF.PdfFontFamily.helvetica, FONT_SIZE_2),
         brush: syncF.PdfBrushes.black,
         bounds: ui.Rect.fromLTWH(qrText1pos.x, qrText1pos.y, qrText1Size.x, qrText1Size.y),
-        format: syncF.PdfStringFormat(lineAlignment: syncF.PdfVerticalAlignment.middle),
-      );
-      page.graphics.restore(normalState);
+        format: syncF.PdfStringFormat(textDirection: syncF.PdfTextDirection.leftToRight),
+      )
+      ..rotateTransform(-90);
     }
 
     // Draw QR code 2

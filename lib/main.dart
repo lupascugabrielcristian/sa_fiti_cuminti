@@ -66,8 +66,8 @@ class _MyHomePageState extends State<MyHomePage> {
       description: '''S fi icumin i implic art live, expozi ii, galerie i street art. Mult diversitate, energie creativ i drive social. Vrem s provoc m societatea s î i trezeasc în fiecare zi la via creativitatea; i ce alt mod mai bun de a face asta, dac nu prin produsele care ne îmbrac i arta care ne înconjoar ?''');
 
   void _generatePdf() {
-    // pdfService.generatePage(eticheta);
-    PdfSyncfusionService().generatePage(eticheta);
+    pdfService.generatePage(eticheta);
+    // PdfSyncfusionService().generatePage(eticheta);
   }
 
   @override
