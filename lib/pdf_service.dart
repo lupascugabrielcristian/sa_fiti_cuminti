@@ -29,7 +29,7 @@ class PdfService {
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
           return pw.Container(
-              height: 200,
+              height: 300,
               decoration: pw.BoxDecoration(
                 border: pw.Border.all(
                     width: 1.0, color: PdfColor.fromHex("#000")),
@@ -75,22 +75,35 @@ class PdfService {
                             // QR codes in a row
                             pw.Container(
                               child: pw.Row(
-                                mainAxisAlignment: pw.MainAxisAlignment .spaceBetween,
+                                mainAxisAlignment: pw.MainAxisAlignment.start,
                                 children: [
-                                  // pw.Text("asfasdfasd", style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.values[0])),
+                                  pw.SizedBox(width: 20),
+
                                   pw.Container(
-                                    width: 50,
-                                    height: 50,
-                                    // color: PdfColor.fromHex("#333333"),
-                                    child: pw.Image(pw.MemoryImage(qr1!), height: 40, width: 40),
+                                    width: 90,
+                                    height: 90,
+                                    child: pw.Image(pw.MemoryImage(qr1!), height: 80, width: 80),
                                   ),
 
                                   pw.Container(
-                                    width: 50,
-                                    height: 50,
-                                    // color: PdfColor.fromHex("#333333"),
-                                    child: pw.Image(pw.MemoryImage(qr2!), height: 40, width: 40),
-                                  )
+                                    width: 90,
+                                    height: 90,
+                                    child: _rotatedText( eticheta.autor.toUpperCase() ),
+                                  ),
+
+                                  pw.Spacer(),
+
+                                  pw.Container(
+                                    width: 90,
+                                    height: 90,
+                                    child: pw.Image(pw.MemoryImage(qr2!), height: 80, width: 80),
+                                  ),
+
+                                  pw.Container(
+                                    width: 90,
+                                    height: 90,
+                                    child: _rotatedText( eticheta.autor.toUpperCase() ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -123,6 +136,12 @@ class PdfService {
       _saveDocument(pdf);
     }
 
+    pw.Widget _rotatedText(String text) {
+      return pw.Transform.rotate(
+          angle: 1.57079633,
+          child: pw.Text(text, style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),));
+    }
+
     void _saveDocument(pw.Document pdf) async {
       final dir = await getApplicationDocumentsDirectory();
       log("downloads: $dir");
@@ -139,16 +158,17 @@ class PdfService {
         gapless: false,
         // Define the colors/styles here if needed
         eyeStyle: const QrEyeStyle(
-          color: Color(0xFF000000), // Black
+          eyeShape: QrEyeShape.square,
+          color: Color(0xFF817E7E), // Black
         ),
         dataModuleStyle: const QrDataModuleStyle(
-          color: Color(0xFFB81919),
+          color: Color(0xFF4C4848),
         )
       );
 
       // 2. Convert the painter to a ui.Image
       // We use the specified size to define the final image resolution.
-      final ui.Image image = await painter.toImage(100.0);
+      final ui.Image image = await painter.toImage(90.0);
 
       // 3. Convert the ui.Image to raw ByteData (PNG format)
       final ByteData? byteData = await image.toByteData(
