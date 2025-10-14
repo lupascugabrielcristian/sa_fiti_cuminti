@@ -34,6 +34,9 @@ class EtichetaWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(eticheta.autor.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold),),
+
+                      SizedBox(height: 10,),
+
                       Text(eticheta.titlu),
                       Text(eticheta.marime),
                       Text(eticheta.an),
@@ -41,9 +44,10 @@ class EtichetaWidget extends StatelessWidget {
                   ),
                 ),
 
+                // HORIZONTAL SEPARATOR
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 20),
-                  width: 250,
+                  width: 270,
                   height: 1,
                   color: Colors.black26,
                 ),
@@ -117,9 +121,10 @@ class EtichetaWidget extends StatelessWidget {
             ),
           ),
 
+          // VERTICAL SEPARATOR
           Container(
             margin: EdgeInsets.only(right: 20),
-            height: 300,
+            height: 260,
             width: 1,
             color: Colors.black26,
           ),

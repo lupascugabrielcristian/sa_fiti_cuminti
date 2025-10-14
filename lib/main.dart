@@ -107,25 +107,25 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         // AUTOR
                         Text('Autor: ', style: TextStyle(fontSize: 18),),
-                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
+                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.autor),),
 
                         SizedBox(height: 20,),
 
                         // TITLU
                         Text('Titlu: ', style: TextStyle(fontSize: 18),),
-                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
+                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.titlu),),
 
                         SizedBox(height: 20,),
 
                         // MARIME
                         Text('Marime: ', style: TextStyle(fontSize: 18),),
-                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
+                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.marime),),
 
                         SizedBox(height: 20,),
 
                         // AN
                         Text('An: ', style: TextStyle(fontSize: 18),),
-                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: "..."),),
+                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.an),),
                       ],
                     )),
                 ),
