@@ -19,7 +19,6 @@ class PdfService {
     final qr2Image = await _getQRCodes();
 
     final img = await rootBundle.load('assets/insta.png');
-    final imageBytes = img.buffer.asUint8List();
 
     _generate(eticheta, qr1Image, qr2Image);
   }
