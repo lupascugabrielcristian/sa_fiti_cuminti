@@ -12,6 +12,7 @@ import 'package:sa_fiti_cuminti/form.dart';
 class PdfService {
 
   final double FIRST_COL_WIDTH = 230;
+  final double CARD_HEIGHT = 200;
 
   void generatePage(Eticheta eticheta) async {
     final qr1Image = await _getQRCodes();
@@ -31,7 +32,7 @@ class PdfService {
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
           return pw.Container(
-              height: 300,
+              height: CARD_HEIGHT,
               decoration: pw.BoxDecoration(
                 border: pw.Border.all(
                     width: 1.0, color: PdfColor.fromHex("#000")),
@@ -42,49 +43,61 @@ class PdfService {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
 
-                    // Col 1
-                    pw.Padding(
-                      padding: pw.EdgeInsets.symmetric(vertical: 00),
+                  // Col 1
+                  pw.Container(
+                      width: FIRST_COL_WIDTH,
+                      decoration: pw.BoxDecoration(
+                        color: PdfColor.fromHex('#555555'),
+                        border: pw.Border(
+                            right: pw.BorderSide(width: 1.0, color: PdfColors.black)),
+                      ),
                       child: pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment
-                                  .start,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Padding(
+                            padding: pw.EdgeInsets.only(left: 10, top: 10),
+
+                            child: pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment .start,
                               children: [
-                                pw.Text(eticheta.autor.toUpperCase(),
-                                  style: pw.TextStyle(
-                                      fontWeight: pw.FontWeight.bold),),
+                                pw.Text(eticheta.autor.toUpperCase(), style: pw.TextStyle( fontWeight: pw.FontWeight.bold),),
+
+                                pw.SizedBox(height: 10),
+
                                 pw.Text(eticheta.titlu),
+                                pw.Text(eticheta.tip),
                                 pw.Text(eticheta.marime),
                                 pw.Text(eticheta.an),
                               ]
                             ),
+                          ),
 
-                            pw.SizedBox(height: 10),
+                          pw.SizedBox(height: 10),
 
-                            // QR codes in a row
-                            pw.Container(
-                              width: FIRST_COL_WIDTH,
-                              decoration: const pw.BoxDecoration(
-                                border: pw.Border(
-                                    top: pw.BorderSide(width: 1.0, color: PdfColors.black)),
-                              ),
-                              child: pw.Row(
-                                mainAxisAlignment: pw.MainAxisAlignment.start,
-                                children: [
-                                  pw.SizedBox(width: 20),
-
-                                  _qrCodeWithText(qr1!, eticheta.autor.toUpperCase()),
-
-                                  pw.SizedBox(width: 10),
-
-                                  _qrCodeWithText(qr2!, eticheta.autor.toUpperCase()),
-                                ],
-                              ),
+                          // QR codes in a row
+                          pw.Container(
+                            width: FIRST_COL_WIDTH,
+                            decoration: const pw.BoxDecoration(
+                              border: pw.Border(
+                                  top: pw.BorderSide(width: 1.0, color: PdfColors.black)),
                             ),
-                          ]
-                      ),
+                            child: pw.Padding(
+                              padding: pw.EdgeInsets.only(top: 10),
+                              child: pw.Row(
+                              mainAxisAlignment: pw.MainAxisAlignment.start,
+                              children: [
+                                pw.SizedBox(width: 10),
+
+                                _qrCodeWithText(qr1!, eticheta.autor.toUpperCase()),
+
+                                pw.SizedBox(width: 10),
+
+                                _qrCodeWithText(qr2!, eticheta.autor.toUpperCase()),
+                              ],
+                            ),
+                            )
+                          ),
+                        ] )
                     ),
 
                     // Vertical separator intre col 1 si descriere

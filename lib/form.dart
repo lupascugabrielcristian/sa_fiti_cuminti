@@ -5,6 +5,7 @@ class Eticheta {
   final String marime;
   final String an = "2025";
   final String description;
+  final String tip;
 
-  const Eticheta({required this.autor, required this.titlu, required this.marime, required this.description});
+  const Eticheta({required this.autor, required this.titlu, required this.marime, required this.description, required this.tip});
 }
