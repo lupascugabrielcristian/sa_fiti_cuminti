@@ -43,69 +43,74 @@ class PdfService {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
 
-                  // Col 1
-                  pw.Container(
-                      width: FIRST_COL_WIDTH,
-                      decoration: pw.BoxDecoration(
-                        color: PdfColor.fromHex('#555555'),
-                        border: pw.Border(
-                            right: pw.BorderSide(width: 1.0, color: PdfColors.black)),
-                      ),
-                      child: pw.Column(
-                        crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        children: [
-                          pw.Padding(
-                            padding: pw.EdgeInsets.only(left: 10, top: 10),
-
-                            child: pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment .start,
-                              children: [
-                                pw.Text(eticheta.autor.toUpperCase(), style: pw.TextStyle( fontWeight: pw.FontWeight.bold),),
-
-                                pw.SizedBox(height: 10),
-
-                                pw.Text(eticheta.titlu),
-                                pw.Text(eticheta.tip),
-                                pw.Text(eticheta.marime),
-                                pw.Text(eticheta.an),
-                              ]
-                            ),
+                    // Col 1
+                    pw.Stack(
+                      children: [
+                        pw.Container(
+                          width: FIRST_COL_WIDTH,
+                          decoration: pw.BoxDecoration(
+                            border: pw.Border(
+                                right: pw.BorderSide(width: 1.0, color: PdfColors.black)),
                           ),
+                          child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Padding(
+                                padding: pw.EdgeInsets.only(left: 10, top: 10),
 
-                          pw.SizedBox(height: 10),
+                                child: pw.Column(
+                                    crossAxisAlignment: pw.CrossAxisAlignment .start,
+                                    children: [
+                                      pw.Text(eticheta.autor.toUpperCase(), style: pw.TextStyle( fontWeight: pw.FontWeight.bold),),
 
-                          // QR codes in a row
-                          pw.Container(
-                            width: FIRST_COL_WIDTH,
-                            decoration: const pw.BoxDecoration(
-                              border: pw.Border(
-                                  top: pw.BorderSide(width: 1.0, color: PdfColors.black)),
-                            ),
-                            child: pw.Padding(
-                              padding: pw.EdgeInsets.only(top: 10),
-                              child: pw.Row(
-                              mainAxisAlignment: pw.MainAxisAlignment.start,
-                              children: [
-                                pw.SizedBox(width: 10),
+                                      pw.SizedBox(height: 10),
 
-                                _qrCodeWithText(qr1!, eticheta.autor.toUpperCase()),
+                                      pw.Text(eticheta.titlu),
+                                      pw.Text(eticheta.tip),
+                                      pw.Text(eticheta.marime),
+                                      pw.Text(eticheta.an),
+                                    ]
+                                ),
+                              ),
 
-                                pw.SizedBox(width: 10),
+                              pw.SizedBox(height: 10),
 
-                                _qrCodeWithText(qr2!, eticheta.autor.toUpperCase()),
-                              ],
-                            ),
-                            )
-                          ),
-                        ] )
+                              // QR codes in a row
+                              pw.Container(
+                                  width: FIRST_COL_WIDTH,
+                                  decoration: const pw.BoxDecoration(
+                                    border: pw.Border(
+                                        top: pw.BorderSide(width: 1.0, color: PdfColors.black)),
+                                  ),
+                                  child: pw.Padding(
+                                    padding: pw.EdgeInsets.only(top: 10),
+                                    child: pw.Row(
+                                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                                      children: [
+                                        pw.SizedBox(width: 10),
+
+                                        _qrCodeWithText(qr1!, eticheta.autor.toUpperCase()),
+
+                                        pw.SizedBox(width: 10),
+
+                                        _qrCodeWithText(qr2!, eticheta.autor.toUpperCase()),
+                                      ],
+                                    ),
+                                  )
+                              ),
+                            ] )
+                        ),
+
+                        // PRETUL
+                        pw.Positioned(
+                          top: 10,
+                          right: 10,
+                          child: pw.Text('1500\nRON'),
+                        ),
+
+
+                      ]
                     ),
-
-                    // Vertical separator intre col 1 si descriere
-                    // pw.Container(
-                    //     height: 280,
-                    //     width: 1,
-                    //     color: PdfColor.fromHex("#000")
-                    // ),
 
                     // Col Descriere
                     pw.Expanded(
