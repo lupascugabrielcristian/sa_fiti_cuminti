@@ -11,6 +11,8 @@ import 'package:sa_fiti_cuminti/form.dart';
 
 class PdfService {
 
+  final double FIRST_COL_WIDTH = 230;
+
   void generatePage(Eticheta eticheta) async {
     final qr1Image = await _getQRCodes();
     final qr2Image = await _getQRCodes();
@@ -42,68 +44,42 @@ class PdfService {
 
                     // Col 1
                     pw.Padding(
-                      padding: pw.EdgeInsets.symmetric(vertical: 20),
+                      padding: pw.EdgeInsets.symmetric(vertical: 00),
                       child: pw.Column(
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
-                            pw.Padding(
-                                padding: pw.EdgeInsets.symmetric(
-                                    horizontal: 20),
-                                child: pw.Column(
-                                    crossAxisAlignment: pw.CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      pw.Text(eticheta.autor.toUpperCase(),
-                                        style: pw.TextStyle(
-                                            fontWeight: pw.FontWeight.bold),),
-                                      pw.Text(eticheta.titlu),
-                                      pw.Text(eticheta.marime),
-                                      pw.Text(eticheta.an),
-                                    ]
-                                )
+                            pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment
+                                  .start,
+                              children: [
+                                pw.Text(eticheta.autor.toUpperCase(),
+                                  style: pw.TextStyle(
+                                      fontWeight: pw.FontWeight.bold),),
+                                pw.Text(eticheta.titlu),
+                                pw.Text(eticheta.marime),
+                                pw.Text(eticheta.an),
+                              ]
                             ),
 
-
-                            // Horizontal separator
-                            pw.Container(
-                                margin: pw.EdgeInsets.symmetric(vertical: 20),
-                                width: 200,
-                                height: 1,
-                                color: PdfColor.fromHex("#000")
-                            ),
+                            pw.SizedBox(height: 10),
 
                             // QR codes in a row
                             pw.Container(
+                              width: FIRST_COL_WIDTH,
+                              decoration: const pw.BoxDecoration(
+                                border: pw.Border(
+                                    top: pw.BorderSide(width: 1.0, color: PdfColors.black)),
+                              ),
                               child: pw.Row(
                                 mainAxisAlignment: pw.MainAxisAlignment.start,
                                 children: [
                                   pw.SizedBox(width: 20),
 
-                                  pw.Container(
-                                    width: 90,
-                                    height: 90,
-                                    child: pw.Image(pw.MemoryImage(qr1!), height: 80, width: 80),
-                                  ),
+                                  _qrCodeWithText(qr1!, eticheta.autor.toUpperCase()),
 
-                                  pw.Container(
-                                    width: 90,
-                                    height: 90,
-                                    child: _rotatedText( eticheta.autor.toUpperCase() ),
-                                  ),
+                                  pw.SizedBox(width: 10),
 
-                                  pw.Spacer(),
-
-                                  pw.Container(
-                                    width: 90,
-                                    height: 90,
-                                    child: pw.Image(pw.MemoryImage(qr2!), height: 80, width: 80),
-                                  ),
-
-                                  pw.Container(
-                                    width: 90,
-                                    height: 90,
-                                    child: _rotatedText( eticheta.autor.toUpperCase() ),
-                                  ),
+                                  _qrCodeWithText(qr2!, eticheta.autor.toUpperCase()),
                                 ],
                               ),
                             ),
@@ -112,11 +88,11 @@ class PdfService {
                     ),
 
                     // Vertical separator intre col 1 si descriere
-                    pw.Container(
-                        height: 300,
-                        width: 1,
-                        color: PdfColor.fromHex("#000")
-                    ),
+                    // pw.Container(
+                    //     height: 280,
+                    //     width: 1,
+                    //     color: PdfColor.fromHex("#000")
+                    // ),
 
                     // Col Descriere
                     pw.Expanded(
@@ -134,12 +110,6 @@ class PdfService {
         })); // Page
 
       _saveDocument(pdf);
-    }
-
-    pw.Widget _rotatedText(String text) {
-      return pw.Transform.rotate(
-          angle: 1.57079633,
-          child: pw.Text(text, style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),));
     }
 
     void _saveDocument(pw.Document pdf) async {
@@ -175,5 +145,36 @@ class PdfService {
           format: ui.ImageByteFormat.png);
       return byteData?.buffer.asUint8List();
     }
+
+    _qrCodeWithText(Uint8List qrData, String text) {
+      return pw.Container(
+        width: 90,
+        child: pw.Row(
+          children: [
+            pw.Container(
+              width: 80,
+              height: 80,
+              child: pw.Image(pw.MemoryImage(qrData), height: 70, width: 70),
+            ),
+
+            pw.SizedBox(width: 5),
+            
+            pw.Container(
+              width: 80,
+              height: 80,
+              margin: pw.EdgeInsets.only(top: -10),
+              child: _rotatedText( text ),
+            ),
+          ]
+        )
+      );
+    }
+
+    pw.Widget _rotatedText(String text) {
+      return pw.Transform.rotate(
+          angle: 1.57079633,
+          child: pw.Text(text, style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),));
+    }
+
   }
 
