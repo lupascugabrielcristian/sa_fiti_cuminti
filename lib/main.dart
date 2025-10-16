@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int selected = 0;
 
   void _generatePdf() {
-    widget.pdfService.generatePage(eticheta);
+    widget.pdfService.generateEtichete(lucrari.map((x) => Eticheta.fromLucrare(x)).toList());
     // PdfSyncfusionService().generatePage(eticheta);
   }
 
