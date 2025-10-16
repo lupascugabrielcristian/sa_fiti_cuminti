@@ -40,6 +40,7 @@ dependencies:
   pretty_qr_code: ^3.5.0
   qr_flutter: 4.1.0
   flutter_svg: ^2.2.1
+  file_picker: ^10.3.3
 
 dev_dependencies:
   flutter_test:

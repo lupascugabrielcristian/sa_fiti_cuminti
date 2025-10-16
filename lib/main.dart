@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:sa_fiti_cuminti/form.dart';
 import 'package:sa_fiti_cuminti/pdf_service.dart';
 import 'package:sa_fiti_cuminti/pdf_syncfusion_service.dart';
@@ -72,6 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
     // PdfSyncfusionService().generatePage(eticheta);
   }
 
+  void _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -137,6 +146,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
 
               ],
+            ),
+            
+            // FILE PICKER
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: GestureDetector(
+                onTap: _pickFile,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue[200],
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
+                  child: const Text(
+                    'Selecteaza imagine',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
             ),
 
             GestureDetector(
