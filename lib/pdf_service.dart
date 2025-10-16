@@ -17,11 +17,11 @@ class PdfService {
   final double FIRST_COL_WIDTH = 230;
   final double CARD_HEIGHT = 200;
   
-  void generateEtichete(List<Eticheta> etichete) {
+  Future<void> generateEtichete(List<Eticheta> etichete) async {
 
     final n = (etichete.length / 4).floor();
-    for (var i = 0; i < n; i) {
-      generatePage([
+    for (var i = 0; i < n; i++) {
+      await _generatePage([
         etichete[4 * i + 0],
         etichete[4 * i + 1],
         etichete[4 * i + 2],
@@ -31,28 +31,29 @@ class PdfService {
 
   }
 
-  void generatePage(List<Eticheta> etichete, int page) async {
+  Future<File> _generatePage(List<Eticheta> etichete, int page) async {
     final qr1Image = await _getQRCodes();
     final qr2Image = await _getQRCodes();
 
     final img = await rootBundle.load('assets/insta.png');
 
-    _generate(etichete, qr1Image, qr2Image, page);
+    return _generate(etichete, qr1Image, qr2Image, page);
   }
 
-  void _generate(List<Eticheta> etichete, Uint8List? qr1, Uint8List? qr2, int page) {
+  Future<File> _generate(List<Eticheta> etichete, Uint8List? qr1, Uint8List? qr2, int page) {
     final pdf = pw.Document();
 
     pdf.addPage(pw.Page(
-        margin: pw.EdgeInsets.all(10),
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) {
-          return pw.Column(
-            children: etichete.map((x) => _buildEticheta(x, qr1, qr2)).toList()
-          );
-        })); // Page
+      margin: pw.EdgeInsets.all(10),
+      pageFormat: PdfPageFormat.a4,
+      build: (pw.Context context) {
+        return pw.Column(
+          children: etichete.map((x) => _buildEticheta(x, qr1, qr2)).toList()
+        );
+      })
+    ); // Page
 
-      _saveDocument(pdf, page);
+      return _saveDocument(pdf, page);
     }
     
     pw.Container _buildEticheta(Eticheta eticheta, Uint8List? qr1, Uint8List? qr2) {
@@ -152,12 +153,12 @@ class PdfService {
       );
     }
 
-    void _saveDocument(pw.Document pdf, int page) async {
+    Future<File> _saveDocument(pw.Document pdf, int page) async {
       final dir = await getApplicationDocumentsDirectory();
       log("downloads: $dir");
 
       final file = File('${dir.path}/safiticuminti_$page.pdf');
-      await file.writeAsBytes(await pdf.save());
+      return file.writeAsBytes(await pdf.save());
     }
 
     Future<Uint8List?> _getQRCodes() async {
