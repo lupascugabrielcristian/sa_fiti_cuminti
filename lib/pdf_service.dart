@@ -11,6 +11,8 @@ import 'package:sa_fiti_cuminti/form.dart';
 
 class PdfService {
 
+  const PdfService();
+
   final double FIRST_COL_WIDTH = 230;
   final double CARD_HEIGHT = 200;
 

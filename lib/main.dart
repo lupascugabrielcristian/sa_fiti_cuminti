@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:sa_fiti_cuminti/csv_service.dart';
 import 'package:sa_fiti_cuminti/form.dart';
 import 'package:sa_fiti_cuminti/pdf_service.dart';
-import 'package:sa_fiti_cuminti/pdf_syncfusion_service.dart';
 
 import 'eticheta_widget.dart';
 
@@ -12,6 +12,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
 
   // This widget is the root of your application.
   @override
@@ -36,13 +37,13 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Generator etichete'),
+      home: const MyHomePage(title: 'Generator etichete', csvService: CsvService(), pdfService: PdfService(),),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.csvService, required this.pdfService});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -54,30 +55,46 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final CsvService csvService;
+  final PdfService pdfService;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final pdfService = PdfService();
+
+  // Default eticheta
   Eticheta eticheta = Eticheta(autor: "Adi Piorescu",
     titlu: 'I sealed myself to find me later',
     marime: '150 X 28 cm',
     description: '''S fi icumin i implic art live, expozi ii, galerie i street art. Mult diversitate, energie creativ i drive social. Vrem s provoc m societatea s î i trezeasc în fiecare zi la via creativitatea; i ce alt mod mai bun de a face asta, dac nu prin produsele care ne îmbrac i arta care ne înconjoar ?''',
     tip: 'Tablou',
   );
+  List<Lucrare> lucrari = [];
+  int selected = 0;
 
   void _generatePdf() {
-    pdfService.generatePage(eticheta);
+    widget.pdfService.generatePage(eticheta);
     // PdfSyncfusionService().generatePage(eticheta);
   }
 
   void _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
 
     if (result != null) {
 
+      String? filePath = result.files.single.path;
+      if (filePath != null) {
+        widget.csvService.readCsvLucrari(filePath).then((l) {
+          print(l);
+          setState(() {
+            selected = 0;
+            lucrari = l;
+            eticheta = Eticheta.fromLucrare(l[selected]);
+          });
+        });
+      }
     }
   }
 
@@ -114,6 +131,36 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // PREV & NEXT BUTTONS
+                        Row(
+                          children: [
+
+                            // PREV
+                            IconButton(
+                              onPressed: () {
+                                selected -= 1;
+                                if (selected == -1) selected = lucrari.length - 1;
+                                eticheta = Eticheta.fromLucrare(lucrari[selected]);
+                              },
+                              icon: const Icon(Icons.arrow_back),
+                            ),
+
+                            Text('Lucrare $selected din ${lucrari.length}'),
+
+                            // NEXT
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  selected += 1;
+                                  if (selected == lucrari.length) selected = 0;
+                                  eticheta = Eticheta.fromLucrare(lucrari[selected]);
+                                });
+                              },
+                              icon: const Icon(Icons.arrow_forward),
+                            ),
+                          ],
+                        ),
+
                         // AUTOR
                         Text('Autor: ', style: TextStyle(fontSize: 18),),
                         TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.autor),),
@@ -160,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
                   child: const Text(
-                    'Selecteaza imagine',
+                    'Selecteaza csv',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

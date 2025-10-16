@@ -82,9 +82,13 @@ class EtichetaWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 2,),
+
+                      // NUME AUTOR
                       RotatedBox(
                         quarterTurns: 3,
-                          child: Text(eticheta.autor.toUpperCase(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
+                        child: SizedBox(
+                          width: 100,
+                          child: Text(eticheta.autor.toUpperCase(), softWrap: true, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),))),
 
                       SizedBox(width: 20,),
 
@@ -111,9 +115,12 @@ class EtichetaWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 2,),
+                      // GALLERY
                       RotatedBox(
-                          quarterTurns: 3,
-                          child: Text(eticheta.autor.toUpperCase(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
+                        quarterTurns: 3,
+                        child: SizedBox(
+                          width: 100,
+                          child: Text('SAFITICUMINTI GALLERY', softWrap: true, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),))),
                     ],
                   ),
                 )
