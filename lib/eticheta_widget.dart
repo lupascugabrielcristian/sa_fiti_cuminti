@@ -28,29 +28,32 @@ class EtichetaWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(eticheta.autor.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold),),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide( width: 1.0, color: Colors.black45, ),
+                    )
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(eticheta.autor.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold),),
 
-                      SizedBox(height: 10,),
+                        SizedBox(height: 10,),
 
-                      Text(eticheta.titlu),
-                      Text(eticheta.marime),
-                      Text(eticheta.an),
-                    ],
+                        Text(eticheta.titlu),
+                        Text(eticheta.marime),
+                        Text(eticheta.an),
+
+                        SizedBox(height: 20,),
+                      ],
+                    ),
                   ),
                 ),
 
-                // HORIZONTAL SEPARATOR
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                  width: 270,
-                  height: 1,
-                  color: Colors.black26,
-                ),
+                SizedBox(height: 20,),
 
                 // QR codes row
                 Padding(
@@ -128,19 +131,24 @@ class EtichetaWidget extends StatelessWidget {
             ),
           ),
 
-          // VERTICAL SEPARATOR
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            height: 260,
-            width: 1,
-            color: Colors.black26,
-          ),
+          // // VERTICAL SEPARATOR
+          // Container(
+          //   margin: EdgeInsets.only(right: 20),
+          //   height: 260,
+          //   width: 1,
+          //   color: Colors.black26,
+          // ),
 
           // Col Descriere
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Flexible(child: Text(eticheta.description, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w200),)),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border( left: BorderSide( width: 1.0, color: Colors.black45, ), )
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20.0),
+                child: Flexible(child: Text(eticheta.description, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w200),)),
+              ),
             ),
           ),
         ],
