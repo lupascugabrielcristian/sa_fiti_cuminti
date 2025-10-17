@@ -138,9 +138,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             // PREV
                             IconButton(
                               onPressed: () {
-                                selected -= 1;
-                                if (selected == -1) selected = lucrari.length - 1;
-                                eticheta = Eticheta.fromLucrare(lucrari[selected]);
+                                setState(() {
+                                  selected = selected - 1;
+                                  if (selected == -1) selected = lucrari.length - 1;
+                                  eticheta = Eticheta.fromLucrare(lucrari[selected]);
+                                });
                               },
                               icon: const Icon(Icons.arrow_back),
                             ),
@@ -188,6 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 Expanded(
                   child: Container(
+                    width: MediaQuery.sizeOf(context).width * 0.6,
                     color: Color.fromARGB(205, 238, 238, 208),
                     child: EtichetaWidget(eticheta: eticheta))
                 ),

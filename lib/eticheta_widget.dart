@@ -16,119 +16,115 @@ class EtichetaWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
         border: Border.all(width: 1.0, color: Colors.black26),
       ),
-      
-      
+
+
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
           // Col 1
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Column(
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide( width: 1.0, color: Colors.black45, ),
-                    )
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(eticheta.autor.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold),),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(eticheta.autor.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold),),
 
-                        SizedBox(height: 10,),
+                      SizedBox(height: 10,),
 
-                        Text(eticheta.titlu),
-                        Text(eticheta.marime),
-                        Text(eticheta.an),
-
-                        SizedBox(height: 20,),
-                      ],
-                    ),
+                      Text(eticheta.titlu),
+                      Text(eticheta.marime),
+                      Text(eticheta.an),
+                    ],
                   ),
                 ),
 
-                SizedBox(height: 20,),
-
                 // QR codes row
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  decoration: BoxDecoration(
+                    border: Border( top: BorderSide( width: 1.0, color: Colors.black26, ), )
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
 
-                      // QR code 1
-                      SizedBox(
-                        height: 90,
-                        width: 90,
-                        child: PrettyQrView(
-                          qrImage: QrImage(QrCode.fromData(data: "www.google.com ${Random().nextInt(5000)}" , errorCorrectLevel: QrErrorCorrectLevel.H),),
-                          decoration: const PrettyQrDecoration(
-                            background: Colors.transparent,
-                            shape: const PrettyQrDotsSymbol(
-                              color: Colors.black,
+                        // QR code 1
+                        SizedBox(
+                          height: 90,
+                          width: 90,
+                          child: PrettyQrView(
+                            qrImage: QrImage(QrCode.fromData(data: "www.google.com ${Random().nextInt(5000)}" , errorCorrectLevel: QrErrorCorrectLevel.H),),
+                            decoration: const PrettyQrDecoration(
+                              background: Colors.transparent,
+                              shape: const PrettyQrDotsSymbol(
+                                color: Colors.black,
+                              ),
+                              quietZone: const PrettyQrQuietZone.modules(0),
+                              image: PrettyQrDecorationImage(
+                                image: AssetImage('assets/insta.png'),
+                                position: PrettyQrDecorationImagePosition.embedded,
+                                scale: 0.3,
+                              ),
+                              // image: AssetImage('assets/logo.png'),
+                              // imageSize: Size(40, 40),
                             ),
-                            quietZone: const PrettyQrQuietZone.modules(0),
-                            image: PrettyQrDecorationImage(
-                              image: AssetImage('assets/insta.png'),
-                              position: PrettyQrDecorationImagePosition.embedded,
-                              scale: 0.3,
-                            ),
-                            // image: AssetImage('assets/logo.png'),
-                            // imageSize: Size(40, 40),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 2,),
+                        SizedBox(width: 2,),
 
-                      // NUME AUTOR
-                      RotatedBox(
-                        quarterTurns: 3,
-                        child: SizedBox(
-                          width: 100,
-                          child: Text(eticheta.autor.toUpperCase(), softWrap: true, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),))),
+                        // NUME AUTOR
+                        RotatedBox(
+                          quarterTurns: 3,
+                          child: SizedBox(
+                            width: 100,
+                            child: Text(eticheta.autor.toUpperCase(), softWrap: true, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),))),
 
-                      SizedBox(width: 20,),
+                        SizedBox(width: 20,),
 
-                      // QR code 2
-                      SizedBox(
-                        height: 90,
-                        width: 90,
-                        child: PrettyQrView(
-                          qrImage: QrImage(QrCode.fromData(data: "www.google.com ${Random().nextInt(5000)}", errorCorrectLevel: QrErrorCorrectLevel.H),),
-                          decoration: const PrettyQrDecoration(
-                            background: Colors.transparent,
-                            shape: const PrettyQrDotsSymbol(
-                              color: Colors.black,
+                        // QR code 2
+                        SizedBox(
+                          height: 90,
+                          width: 90,
+                          child: PrettyQrView(
+                            qrImage: QrImage(QrCode.fromData(data: "www.google.com ${Random().nextInt(5000)}", errorCorrectLevel: QrErrorCorrectLevel.H),),
+                            decoration: const PrettyQrDecoration(
+                              background: Colors.transparent,
+                              shape: const PrettyQrDotsSymbol(
+                                color: Colors.black,
+                              ),
+                              quietZone: const PrettyQrQuietZone.modules(0),
+                              image: PrettyQrDecorationImage(
+                                image: AssetImage('assets/insta.png'),
+                                position: PrettyQrDecorationImagePosition.embedded,
+                                scale: 0.3,
+                              ),
+                              // image: AssetImage('assets/logo.png'),
+                              // imageSize: Size(40, 40),
                             ),
-                            quietZone: const PrettyQrQuietZone.modules(0),
-                            image: PrettyQrDecorationImage(
-                              image: AssetImage('assets/insta.png'),
-                              position: PrettyQrDecorationImagePosition.embedded,
-                              scale: 0.3,
-                            ),
-                            // image: AssetImage('assets/logo.png'),
-                            // imageSize: Size(40, 40),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 2,),
-                      // GALLERY
-                      RotatedBox(
-                        quarterTurns: 3,
-                        child: SizedBox(
-                          width: 100,
-                          child: Text('SAFITICUMINTI GALLERY', softWrap: true, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),))),
-                    ],
+                        SizedBox(width: 2,),
+                        // GALLERY
+                        RotatedBox(
+                          quarterTurns: 3,
+                          child: SizedBox(
+                            width: 100,
+                            child: Text('SAFITICUMINTI GALLERY', softWrap: true, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),))),
+                      ],
+                    ),
                   ),
                 )
               ],
-            ),
+            );
+            },
           ),
 
           // // VERTICAL SEPARATOR
@@ -147,7 +143,7 @@ class EtichetaWidget extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20.0),
-                child: Flexible(child: Text(eticheta.description, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w200),)),
+                  child: Text(eticheta.description, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w200),)
               ),
             ),
           ),
