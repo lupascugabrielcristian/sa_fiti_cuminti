@@ -33,6 +33,8 @@ class EtichetaWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 10,),
+
                       Text(eticheta.autor.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold),),
 
                       SizedBox(height: 10,),
@@ -47,6 +49,7 @@ class EtichetaWidget extends StatelessWidget {
                 // QR codes row
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 20),
+                  padding: EdgeInsets.only(top: 10),
                   decoration: BoxDecoration(
                     border: Border( top: BorderSide( width: 1.0, color: Colors.black26, ), )
                   ),
@@ -123,28 +126,21 @@ class EtichetaWidget extends StatelessWidget {
                   ),
                 )
               ],
-            );
+                          );
             },
           ),
 
-          // // VERTICAL SEPARATOR
-          // Container(
-          //   margin: EdgeInsets.only(right: 20),
-          //   height: 260,
-          //   width: 1,
-          //   color: Colors.black26,
-          // ),
+          Container(
+            color: Colors.black26,
+            width: 1,
+            height: 250,
+          ),
 
           // Col Descriere
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border( left: BorderSide( width: 1.0, color: Colors.black45, ), )
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20.0),
-                  child: Text(eticheta.description, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w200),)
-              ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20.0),
+                child: Text(eticheta.description, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w200),)
             ),
           ),
         ],
