@@ -76,9 +76,10 @@ class _MyHomePageState extends State<MyHomePage> {
   LucrariController controller = LucrariController();
   List<Lucrare> lucrari = [];
   int selected = 0;
+  String generateBtnText = 'Generate';
 
   void _generatePdf() {
-    widget.pdfService.generateEtichete(lucrari.map((x) => Eticheta.fromLucrare(x)).toList());
+    widget.pdfService.generateEtichete(controller.selected.map((x) => Eticheta.fromLucrare(x)).toList());
     // PdfSyncfusionService().generatePage(eticheta);
   }
 
@@ -204,7 +205,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
             if (lucrari.isNotEmpty) SizedBox(
               height: MediaQuery.sizeOf(context).height - 480,
-              child: SingleChildScrollView(child: LucrariList(lucrari: lucrari, controller: controller))
+              child: SingleChildScrollView(child: LucrariList(
+                lucrari: lucrari,
+                controller: controller,
+                onUpdate: () {
+                  setState(() {
+                    generateBtnText = 'Generate ${controller.size}';
+                  });
+                },
+              ))
             ),
 
             SizedBox(height: 10,),
@@ -240,10 +249,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderRadius: const BorderRadius.all(Radius.circular(20) ),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
-                    child: const Column(
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Genereaza', style: TextStyle(color: Colors.white),),
+                        Text(generateBtnText, style: TextStyle(color: Colors.white),),
                       ],
                     ),
                   ),

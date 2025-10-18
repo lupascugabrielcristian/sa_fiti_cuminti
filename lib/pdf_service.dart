@@ -16,31 +16,39 @@ class PdfService {
 
   final double FIRST_COL_WIDTH = 230;
   final double CARD_HEIGHT = 200;
+  final double FONT_SIZE = 12;
   
   Future<void> generateEtichete(List<Eticheta> etichete) async {
 
-    final n = (etichete.length / 4).floor();
+    final n = (etichete.length / 4).round();
     for (var i = 0; i < n; i++) {
       await _generatePage([
         etichete[4 * i + 0],
         etichete[4 * i + 1],
         etichete[4 * i + 2],
-        etichete[4 * i + 3],
+        if (etichete.length > 4 * i + 3) etichete[4 * i + 3],
       ], i);
     }
-
   }
 
   Future<File> _generatePage(List<Eticheta> etichete, int page) async {
     final qr1Image = await _getQRCodes();
     final qr2Image = await _getQRCodes();
 
-    final img = await rootBundle.load('assets/insta.png');
+    // final img = await rootBundle.load('assets/insta.png');
+    final font = await _loadFont();
 
-    return _generate(etichete, qr1Image, qr2Image, page);
+    return _generate(etichete, qr1Image, qr2Image, page, font);
   }
 
-  Future<File> _generate(List<Eticheta> etichete, Uint8List? qr1, Uint8List? qr2, int page) {
+  Future<pw.Font> _loadFont() async {
+    final ByteData fontData = await rootBundle.load('assets/fonts/DarkerGrotesque-VariableFont_wght.ttf');
+    // The pw.Font.ttf method expects ByteData, so we pass the loaded data directly.
+    final pw.Font ttf = pw.Font.ttf(fontData);
+    return ttf;
+  }
+
+  Future<File> _generate(List<Eticheta> etichete, Uint8List? qr1, Uint8List? qr2, int page, pw.Font font) {
     final pdf = pw.Document();
 
     pdf.addPage(pw.Page(
@@ -48,7 +56,7 @@ class PdfService {
       pageFormat: PdfPageFormat.a4,
       build: (pw.Context context) {
         return pw.Column(
-          children: etichete.map((x) => _buildEticheta(x, qr1, qr2)).toList()
+          children: etichete.map((x) => _buildEticheta(x, qr1, qr2, font)).toList()
         );
       })
     ); // Page
@@ -56,7 +64,7 @@ class PdfService {
       return _saveDocument(pdf, page);
     }
     
-    pw.Container _buildEticheta(Eticheta eticheta, Uint8List? qr1, Uint8List? qr2) {
+    pw.Container _buildEticheta(Eticheta eticheta, Uint8List? qr1, Uint8List? qr2, pw.Font font) {
       return pw.Container(
         margin: pw.EdgeInsets.symmetric(vertical: 20),
           height: CARD_HEIGHT,
@@ -141,11 +149,9 @@ class PdfService {
                 // Col Descriere
                 pw.Expanded(
                   child: pw.Padding(
-                    padding: const pw.EdgeInsets.symmetric(
-                        vertical: 20.0, horizontal: 20),
+                    padding: const pw.EdgeInsets.symmetric( vertical: 20.0, horizontal: 20),
                     child: pw.Flexible(child: pw.Text(eticheta.description,
-                      style: pw.TextStyle(fontSize: 14, fontWeight: pw
-                          .FontWeight.values[0]),)),
+                    style: pw.TextStyle(font: font ,fontSize: FONT_SIZE, fontWeight: pw.FontWeight.values[0]),)),
                   ),
                 ),
               ]

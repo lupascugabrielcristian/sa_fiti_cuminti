@@ -5,9 +5,9 @@ import 'form.dart';
 class LucrariList extends StatefulWidget {
   final List<Lucrare> lucrari;
   final LucrariController controller;
+  final Function() onUpdate;
 
-  const LucrariList(
-      {super.key, required this.lucrari, required this.controller});
+  const LucrariList( {super.key, required this.lucrari, required this.controller, required this.onUpdate});
 
   @override
   State<LucrariList> createState() => _LucrariListState();
@@ -27,6 +27,8 @@ class _LucrariListState extends State<LucrariList> {
                 setState(() {
                   widget.controller.addMultiple(widget.lucrari);
                 });
+
+                widget.onUpdate();
               },
               child: Text('Select all', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.indigo),)),
             GestureDetector(
@@ -70,6 +72,7 @@ class _LucrariListState extends State<LucrariList> {
                 widget.controller.remove(l);
               });
             }
+            widget.onUpdate();
           }),
           _buildDataCell(l.autor),
           _buildDataCell(l.denumire),
@@ -114,4 +117,6 @@ class LucrariController {
   void removeAll() {
     selected.clear();
   }
+
+  int get size => selected.length;
 }
