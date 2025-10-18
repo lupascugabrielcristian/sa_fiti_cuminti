@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/services.dart';
@@ -10,15 +9,24 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sa_fiti_cuminti/form.dart';
 
+class FontStyles {
+  final pw.Font normal;
+  final pw.Font qr;
+  final pw.Font bold;
+
+  const FontStyles(this.normal, this.qr, this.bold);
+}
+
 class PdfService {
 
   const PdfService();
 
-  final double FIRST_COL_WIDTH = 230;
+  final double FIRST_COL_WIDTH = 210;
   final double CARD_HEIGHT = 200;
-  final double FONT_SIZE = 12;
-  
-  Future<void> generateEtichete(List<Eticheta> etichete) async {
+  final double FONT_SIZE = 11;
+  final double FONT_SIZE_QR = 9;
+
+  Future<int> generateEtichete(List<Eticheta> etichete) async {
 
     final n = (etichete.length / 4).round();
     for (var i = 0; i < n; i++) {
@@ -29,6 +37,8 @@ class PdfService {
         if (etichete.length > 4 * i + 3) etichete[4 * i + 3],
       ], i);
     }
+
+    return n;
   }
 
   Future<File> _generatePage(List<Eticheta> etichete, int page) async {
@@ -37,18 +47,26 @@ class PdfService {
 
     // final img = await rootBundle.load('assets/insta.png');
     final font = await _loadFont();
+    final fontBold = await _loadFontBold();
+    final fontStyles = FontStyles(font, font, fontBold);
 
-    return _generate(etichete, qr1Image, qr2Image, page, font);
+    return _generate(etichete, qr1Image, qr2Image, page, fontStyles);
   }
 
   Future<pw.Font> _loadFont() async {
     final ByteData fontData = await rootBundle.load('assets/fonts/DarkerGrotesque-VariableFont_wght.ttf');
-    // The pw.Font.ttf method expects ByteData, so we pass the loaded data directly.
     final pw.Font ttf = pw.Font.ttf(fontData);
     return ttf;
   }
 
-  Future<File> _generate(List<Eticheta> etichete, Uint8List? qr1, Uint8List? qr2, int page, pw.Font font) {
+  Future<pw.Font> _loadFontBold() async {
+    final ByteData fontData = await rootBundle.load('assets/fonts/LexendDeca-VariableFont_wght.ttf');
+    // final ByteData fontData = await rootBundle.load('assets/fonts/IBMPlexSans-VariableFont_wdth,wght.ttf');
+    final pw.Font ttf = pw.Font.ttf(fontData);
+    return ttf;
+  }
+
+  Future<File> _generate(List<Eticheta> etichete, Uint8List? qr1, Uint8List? qr2, int page, FontStyles font) {
     final pdf = pw.Document();
 
     pdf.addPage(pw.Page(
@@ -63,10 +81,15 @@ class PdfService {
 
       return _saveDocument(pdf, page);
     }
-    
-    pw.Container _buildEticheta(Eticheta eticheta, Uint8List? qr1, Uint8List? qr2, pw.Font font) {
+
+
+    pw.Container _buildEticheta(Eticheta eticheta, Uint8List? qr1, Uint8List? qr2, FontStyles font) {
+      pw.TextStyle fontStyleBold = pw.TextStyle(font: font.bold, fontSize: FONT_SIZE, fontWeight: pw.FontWeight.bold, letterSpacing: 0);
+      pw.TextStyle fontStyleQr = pw.TextStyle(font: font.qr, fontSize: FONT_SIZE_QR, fontWeight: pw.FontWeight.values[1], lineSpacing: 0);
+      pw.TextStyle fontStyle = pw.TextStyle(font: font.normal, fontSize: FONT_SIZE, fontWeight: pw.FontWeight.values[0]);
+
       return pw.Container(
-        margin: pw.EdgeInsets.symmetric(vertical: 20),
+        margin: pw.EdgeInsets.symmetric(vertical: 10),
           height: CARD_HEIGHT,
           decoration: pw.BoxDecoration(
             border: pw.Border.all(
@@ -90,19 +113,19 @@ class PdfService {
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
                           pw.Padding(
-                            padding: pw.EdgeInsets.only(left: 10, top: 10),
+                            padding: pw.EdgeInsets.only(left: 10, top: 5),
 
                             child: pw.Column(
                                 crossAxisAlignment: pw.CrossAxisAlignment .start,
                                 children: [
-                                  pw.Text(eticheta.autor.toUpperCase(), style: pw.TextStyle( fontWeight: pw.FontWeight.bold),),
+                                  pw.Text(eticheta.autor.toUpperCase(), style: fontStyleBold,),
 
-                                  pw.SizedBox(height: 10),
+                                  pw.SizedBox(height: 5),
 
-                                  pw.Text(eticheta.titlu),
-                                  pw.Text(eticheta.tip),
-                                  pw.Text(eticheta.marime),
-                                  pw.Text(eticheta.an),
+                                  pw.Text(eticheta.titlu, style: fontStyle),
+                                  pw.Text(eticheta.tip, style: fontStyle),
+                                  pw.Text(eticheta.marime, style: fontStyle),
+                                  pw.Text(eticheta.an, style: fontStyle),
                                 ]
                             ),
                           ),
@@ -117,17 +140,17 @@ class PdfService {
                                     top: pw.BorderSide(width: 1.0, color: PdfColors.black)),
                               ),
                               child: pw.Padding(
-                                padding: pw.EdgeInsets.only(top: 10),
+                                padding: pw.EdgeInsets.only(top: 20),
                                 child: pw.Row(
                                   mainAxisAlignment: pw.MainAxisAlignment.start,
                                   children: [
                                     pw.SizedBox(width: 10),
 
-                                    _qrCodeWithText(qr1!, eticheta.autor.toUpperCase()),
+                                    _qrCodeWithText(qr1!, eticheta.autor.toUpperCase(), fontStyleQr),
 
-                                    pw.SizedBox(width: 10),
+                                    pw.SizedBox(width: 30),
 
-                                    _qrCodeWithText(qr2!, eticheta.autor.toUpperCase()),
+                                    _qrCodeWithText(qr2!, eticheta.autor.toUpperCase(), fontStyleQr),
                                   ],
                                 ),
                               )
@@ -136,10 +159,10 @@ class PdfService {
                     ),
 
                     // PRETUL
-                    pw.Positioned(
-                      top: 10,
+                    if (eticheta.pret > 0) pw.Positioned(
+                      top: 3,
                       right: 10,
-                      child: pw.Text('1500\nRON'),
+                      child: pw.Text('${eticheta.pret}\n${eticheta.pretUnit}', style: fontStyle),
                     ),
 
 
@@ -149,11 +172,10 @@ class PdfService {
                 // Col Descriere
                 pw.Expanded(
                   child: pw.Padding(
-                    padding: const pw.EdgeInsets.symmetric( vertical: 20.0, horizontal: 20),
-                    child: pw.Flexible(child: pw.Text(eticheta.description,
-                    style: pw.TextStyle(font: font ,fontSize: FONT_SIZE, fontWeight: pw.FontWeight.values[0]),)),
+                    padding: const pw.EdgeInsets.symmetric( vertical: 5.0, horizontal: 10),
+                    child: pw.Flexible( child: pw.Text( eticheta.description, style: fontStyle ),
                   ),
-                ),
+                )),
               ]
           )
       );
@@ -176,10 +198,10 @@ class PdfService {
         // Define the colors/styles here if needed
         eyeStyle: const QrEyeStyle(
           eyeShape: QrEyeShape.square,
-          color: Color(0xFF817E7E), // Black
+          color: Color(0xFF3C3C3C), // Black
         ),
         dataModuleStyle: const QrDataModuleStyle(
-          color: Color(0xFF4C4848),
+          color: Color(0xFF3C3C3C),
         )
       );
 
@@ -193,34 +215,34 @@ class PdfService {
       return byteData?.buffer.asUint8List();
     }
 
-    _qrCodeWithText(Uint8List qrData, String text) {
+    _qrCodeWithText(Uint8List qrData, String text, pw.TextStyle fontStyle) {
       return pw.Container(
-        width: 90,
+        width: 70,
         child: pw.Row(
           children: [
             pw.Container(
-              width: 80,
-              height: 80,
-              child: pw.Image(pw.MemoryImage(qrData), height: 70, width: 70),
+              width: 60,
+              height: 60,
+              child: pw.Image(pw.MemoryImage(qrData), height: 60, width: 60),
             ),
 
-            pw.SizedBox(width: 5),
+            // pw.SizedBox(width: 5),
             
             pw.Container(
-              width: 80,
-              height: 80,
-              margin: pw.EdgeInsets.only(top: -10),
-              child: _rotatedText( text ),
+              width: 60,
+              height: 60,
+              margin: pw.EdgeInsets.only(top: 0),
+              child: _rotatedText( text, fontStyle ),
             ),
           ]
         )
       );
     }
 
-    pw.Widget _rotatedText(String text) {
+    pw.Widget _rotatedText(String text, pw.TextStyle fontStyle) {
       return pw.Transform.rotate(
           angle: 1.57079633,
-          child: pw.Text(text, style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),));
+          child: pw.Text(text, style: fontStyle));
     }
 
   }

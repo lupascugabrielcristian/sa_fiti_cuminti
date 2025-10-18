@@ -71,6 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
     marime: '150 X 28 cm',
     description: '''S fi icumin i implic art live, expozi ii, galerie i street art. Mult diversitate, energie creativ i drive social. Vrem s provoc m societatea s î i trezeasc în fiecare zi la via creativitatea; i ce alt mod mai bun de a face asta, dac nu prin produsele care ne îmbrac i arta care ne înconjoar ?''',
     tip: 'Tablou',
+    pret: 1500,
+    pretUnit: 'RON'
   );
 
   LucrariController controller = LucrariController();
@@ -79,7 +81,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String generateBtnText = 'Generate';
 
   void _generatePdf() {
-    widget.pdfService.generateEtichete(controller.selected.map((x) => Eticheta.fromLucrare(x)).toList());
+    widget.pdfService.generateEtichete(controller.selected.map((x) => Eticheta.fromLucrare(x)).toList()).then(( files ) {
+      setState(() {
+        generateBtnText = 'Generate ${controller.size}';
+      });
+
+      _showMessageDialog(context, 'Completed', '$files generated');
+    });
     // PdfSyncfusionService().generatePage(eticheta);
   }
 
@@ -241,6 +249,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 GestureDetector(
                   onTap: () {
+                    setState(() {
+                      generateBtnText = '...';
+                    });
+
                     _generatePdf();
                   },
                   child: Container(
@@ -262,6 +274,26 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showMessageDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

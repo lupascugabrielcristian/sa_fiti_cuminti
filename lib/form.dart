@@ -6,17 +6,43 @@ class Eticheta {
   final String an = "2025";
   final String description;
   final String tip;
+  final int pret;
+  final String pretUnit;
 
-  const Eticheta({required this.autor, required this.titlu, required this.marime, required this.description, required this.tip});
+  const Eticheta({required this.autor, required this.titlu, required this.marime, required this.description, required this.tip, required this.pret, required this.pretUnit, });
 
   factory Eticheta.fromLucrare(Lucrare lucrare) {
+
+    final (pret, unit) = _extractPret(lucrare.pret);
+
     return Eticheta(
-        autor: lucrare.autor,
-        titlu: lucrare.denumire,
-        marime: lucrare.dimensiune,
-        description: lucrare.descriere,
-        tip: lucrare.tip
+      autor: lucrare.autor,
+      titlu: lucrare.denumire,
+      marime: lucrare.dimensiune,
+      description: lucrare.descriere,
+      tip: lucrare.tip,
+      pret: pret,
+      pretUnit: unit
     );
+  }
+
+  static (int, String) _extractPret(String pretString) {
+    final parts = pretString.split(' ');
+    if (parts.length >= 2) {
+      final p = int.tryParse(parts[0]);
+      if (p != null) {
+        String pU = parts[1].toUpperCase();
+        if (pU.trim().toLowerCase() == 'e') {
+          pU = 'EUR';
+        } else if (pretString.toLowerCase().trim().contains('de lei')) {
+          pU = 'RON';
+        }
+
+        return (p, pU);
+      }
+    }
+
+    return (0, '');
   }
 }
 
