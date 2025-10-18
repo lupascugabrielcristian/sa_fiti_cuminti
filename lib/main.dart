@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:sa_fiti_cuminti/csv_service.dart';
 import 'package:sa_fiti_cuminti/form.dart';
+import 'package:sa_fiti_cuminti/lucrari_list.dart';
 import 'package:sa_fiti_cuminti/pdf_service.dart';
 
 import 'eticheta_widget.dart';
@@ -71,6 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
     description: '''S fi icumin i implic art live, expozi ii, galerie i street art. Mult diversitate, energie creativ i drive social. Vrem s provoc m societatea s î i trezeasc în fiecare zi la via creativitatea; i ce alt mod mai bun de a face asta, dac nu prin produsele care ne îmbrac i arta care ne înconjoar ?''',
     tip: 'Tablou',
   );
+
+  LucrariController controller = LucrariController();
   List<Lucrare> lucrari = [];
   int selected = 0;
 
@@ -107,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
@@ -197,47 +201,55 @@ class _MyHomePageState extends State<MyHomePage> {
 
               ],
             ),
-            
-            // FILE PICKER
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: GestureDetector(
-                onTap: _pickFile,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue[200],
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
-                  child: const Text(
-                    'Selecteaza csv',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
+
+            if (lucrari.isNotEmpty) SizedBox(
+              height: MediaQuery.sizeOf(context).height - 480,
+              child: SingleChildScrollView(child: LucrariList(lucrari: lucrari, controller: controller))
             ),
 
-            GestureDetector(
-              onTap: () {
-                _generatePdf();
-              },
-              child: Container(
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  color: Colors.purple[200],
-                  borderRadius: const BorderRadius.all(Radius.circular(20) ),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Genereaza', style: TextStyle(color: Colors.white),),
-                  ],
-                ),
-              ),
-            ),
+            SizedBox(height: 10,),
 
-            SizedBox(height: 20,),
+            Row(
+              spacing: 20,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                // FILE PICKER
+                GestureDetector(
+                  onTap: _pickFile,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue[200],
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
+                    child: const Text(
+                      'Selecteaza csv',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+
+                GestureDetector(
+                  onTap: () {
+                    _generatePdf();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.purple[200],
+                      borderRadius: const BorderRadius.all(Radius.circular(20) ),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
+                    child: const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Genereaza', style: TextStyle(color: Colors.white),),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
