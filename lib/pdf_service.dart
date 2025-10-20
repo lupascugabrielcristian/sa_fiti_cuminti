@@ -14,7 +14,7 @@ class FontStyles {
   final pw.Font qr;
   final pw.Font bold;
 
-  const FontStyles(this.normal, this.qr, this.bold);
+  const FontStyles({required this.normal, required this.qr, required this.bold});
 }
 
 class PdfService {
@@ -23,6 +23,7 @@ class PdfService {
 
   final double FIRST_COL_WIDTH = 210;
   final double CARD_HEIGHT = 200;
+  final double CARD_WIDTH = 400;
   final double FONT_SIZE = 11;
   final double FONT_SIZE_QR = 9;
 
@@ -44,13 +45,13 @@ class PdfService {
   Future<File> _generatePage(List<Eticheta> etichete, int page) async {
     final qr1Image = await _getQRCodes();
     final qr2Image = await _getQRCodes();
+    final logoImage = await rootBundle.load('assets/safiticuminti.jpeg');
 
-    // final img = await rootBundle.load('assets/insta.png');
     final font = await _loadFont();
     final fontBold = await _loadFontBold();
-    final fontStyles = FontStyles(font, font, fontBold);
+    final fontStyles = FontStyles(normal: font, qr: fontBold, bold: fontBold);
 
-    return _generate(etichete, qr1Image, qr2Image, page, fontStyles);
+    return _generate(etichete, qr1Image, qr2Image, logoImage.buffer.asUint8List(), page, fontStyles);
   }
 
   Future<pw.Font> _loadFont() async {
@@ -60,14 +61,14 @@ class PdfService {
   }
 
   Future<pw.Font> _loadFontBold() async {
-    final ByteData fontData = await rootBundle.load('assets/fonts/Lulo Clean W01 One Bold.otf');
-    // final ByteData fontData = await rootBundle.load('assets/fonts/LexendDeca-VariableFont_wght.ttf');
+    // final ByteData fontData = await rootBundle.load('assets/fonts/Lulo Clean W01 One Bold.otf');
+    final ByteData fontData = await rootBundle.load('assets/fonts/LexendDeca-VariableFont_wght.ttf');
     // final ByteData fontData = await rootBundle.load('assets/fonts/IBMPlexSans-VariableFont_wdth,wght.ttf');
     final pw.Font ttf = pw.Font.ttf(fontData);
     return ttf;
   }
 
-  Future<File> _generate(List<Eticheta> etichete, Uint8List? qr1, Uint8List? qr2, int page, FontStyles font) {
+  Future<File> _generate(List<Eticheta> etichete, Uint8List? qr1, Uint8List? qr2, Uint8List logoImage, int page, FontStyles fonts) {
     final pdf = pw.Document();
 
     pdf.addPage(pw.Page(
@@ -75,7 +76,7 @@ class PdfService {
       pageFormat: PdfPageFormat.a4,
       build: (pw.Context context) {
         return pw.Column(
-          children: etichete.map((x) => _buildEticheta(x, qr1, qr2, font)).toList()
+          children: etichete.map((x) => _buildEticheta(x, qr1, qr2, logoImage, fonts)).toList()
         );
       })
     ); // Page
@@ -84,101 +85,115 @@ class PdfService {
     }
 
 
-    pw.Container _buildEticheta(Eticheta eticheta, Uint8List? qr1, Uint8List? qr2, FontStyles font) {
-      pw.TextStyle fontStyleBold = pw.TextStyle(font: font.bold, fontSize: FONT_SIZE, fontWeight: pw.FontWeight.bold, letterSpacing: 0);
-      pw.TextStyle fontStyleQr = pw.TextStyle(font: font.qr, fontSize: FONT_SIZE_QR, fontWeight: pw.FontWeight.values[1], lineSpacing: 0);
-      pw.TextStyle fontStyle = pw.TextStyle(font: font.normal, fontSize: FONT_SIZE, fontWeight: pw.FontWeight.values[0]);
+    pw.Widget _buildEticheta(Eticheta eticheta, Uint8List? qr1, Uint8List? qr2, Uint8List logoImage, FontStyles fonts) {
+      pw.TextStyle fontStyleBold = pw.TextStyle(font: fonts.bold, fontSize: FONT_SIZE, fontWeight: pw.FontWeight.bold, letterSpacing: 0);
+      pw.TextStyle fontStyleQr = pw.TextStyle(font: fonts.qr, fontSize: FONT_SIZE_QR, fontWeight: pw.FontWeight.values[1], lineSpacing: 0);
+      pw.TextStyle fontStyle = pw.TextStyle(font: fonts.normal, fontSize: FONT_SIZE, fontWeight: pw.FontWeight.values[0], lineSpacing: 0, height: 1);
 
-      return pw.Container(
-        margin: pw.EdgeInsets.symmetric(vertical: 10),
-          height: CARD_HEIGHT,
-          decoration: pw.BoxDecoration(
-            border: pw.Border.all(
-                width: 1.0, color: PdfColor.fromHex("#000")),
+      return pw.Stack(
+        children: [
+          // LOGO SAFITICUMINTI
+          
+          pw.Positioned(
+            bottom: 20,
+            right: 10,
+            child: pw.Image(pw.MemoryImage(logoImage), height: 35),
           ),
 
-          child: pw.Row(
+          // ETICHETA PROPRIUZISA
+          pw.Container(
+            margin: pw.EdgeInsets.symmetric(vertical: 10),
+            height: CARD_HEIGHT,
+            width: CARD_WIDTH,
+            decoration: pw.BoxDecoration(
+              border: pw.Border.all(
+                  width: 1.0, color: PdfColor.fromHex("#000")),
+            ),
+
+            child: pw.Row(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
 
-                // Col 1
-                pw.Stack(
-                  children: [
-                    pw.Container(
+              // Col 1
+              pw.Stack(
+                children: [
+                  pw.Expanded(
+                    child: pw.Container(
                       width: FIRST_COL_WIDTH,
-                      decoration: pw.BoxDecoration(
-                        border: pw.Border(
-                            right: pw.BorderSide(width: 1.0, color: PdfColors.black)),
-                      ),
-                      child: pw.Column(
-                        crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        children: [
-                          pw.Padding(
-                            padding: pw.EdgeInsets.only(left: 10, top: 5),
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border(
+                              right: pw.BorderSide(width: 1.0, color: PdfColors.black)),
+                        ),
+                        child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Padding(
+                                padding: pw.EdgeInsets.only(left: 10, top: 5, right: 10),
 
-                            child: pw.Column(
-                                crossAxisAlignment: pw.CrossAxisAlignment .start,
-                                children: [
-                                  pw.Text(eticheta.autor.toUpperCase(), style: fontStyleBold,),
-
-                                  pw.SizedBox(height: 5),
-
-                                  pw.Text(eticheta.titlu, style: fontStyle),
-                                  pw.Text(eticheta.tip, style: fontStyle),
-                                  pw.Text(eticheta.marime, style: fontStyle),
-                                  pw.Text(eticheta.an, style: fontStyle),
-                                ]
-                            ),
-                          ),
-
-                          pw.SizedBox(height: 10),
-
-                          // QR codes in a row
-                          pw.Container(
-                              width: FIRST_COL_WIDTH,
-                              decoration: const pw.BoxDecoration(
-                                border: pw.Border(
-                                    top: pw.BorderSide(width: 1.0, color: PdfColors.black)),
-                              ),
-                              child: pw.Padding(
-                                padding: pw.EdgeInsets.only(top: 20),
-                                child: pw.Row(
-                                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                                child: pw.Column(
+                                  crossAxisAlignment: pw.CrossAxisAlignment.start,
                                   children: [
-                                    pw.SizedBox(width: 10),
+                                    pw.Text(eticheta.autor.toUpperCase(), style: fontStyleBold,),
 
-                                    _qrCodeWithText(qr1!, eticheta.autor.toUpperCase(), fontStyleQr),
+                                    pw.SizedBox(height: 5),
 
-                                    pw.SizedBox(width: 30),
-
-                                    _qrCodeWithText(qr2!, eticheta.autor.toUpperCase(), fontStyleQr),
-                                  ],
+                                    pw.Text(eticheta.titlu, style: fontStyle),
+                                    pw.Text(eticheta.tip, style: fontStyle),
+                                    pw.Text(eticheta.marime, style: fontStyle),
+                                    pw.Text(eticheta.an, style: fontStyle),
+                                  ]
                                 ),
-                              )
-                          ),
-                        ] )
+                              ),
+
+                              pw.SizedBox(height: 10),
+
+                              // QR codes in a row
+                              pw.Container(
+                                  width: FIRST_COL_WIDTH,
+                                  decoration: const pw.BoxDecoration(
+                                    border: pw.Border(
+                                        top: pw.BorderSide(width: 1.0, color: PdfColors.black)),
+                                  ),
+                                  child: pw.Padding(
+                                    padding: pw.EdgeInsets.only(top: 20),
+                                    child: pw.Row(
+                                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                                      children: [
+                                        pw.SizedBox(width: 10),
+
+                                        _qrCodeWithText(qr1!, eticheta.autor.toUpperCase(), fontStyleQr),
+
+                                        pw.SizedBox(width: 30),
+
+                                        _qrCodeWithText(qr2!, eticheta.autor.toUpperCase(), fontStyleQr),
+                                      ],
+                                    ),
+                                  )
+                              ),
+                            ] )
                     ),
 
-                    // PRETUL
-                    if (eticheta.pret > 0) pw.Positioned(
-                      top: 3,
-                      right: 10,
-                      child: pw.Text('${eticheta.pret}\n${eticheta.pretUnit}', style: fontStyle),
-                    ),
-
-
-                  ]
-                ),
-
-                // Col Descriere
-                pw.Expanded(
-                  child: pw.Padding(
-                    padding: const pw.EdgeInsets.symmetric( vertical: 5.0, horizontal: 10),
-                    child: pw.Flexible( child: pw.Text( eticheta.description, style: fontStyle ),
                   ),
-                )),
-              ]
-          )
+
+                  // PRETUL
+                  if (eticheta.pret > 0) pw.Positioned(
+                    top: 3,
+                    right: 10,
+                    child: pw.Text('${eticheta.pret}\n${eticheta.pretUnit}', style: fontStyle),
+                  ),
+                ]
+              ),
+
+              // Col Descriere
+              pw.Expanded(
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric( vertical: 5.0, horizontal: 30),
+                  child: pw.Flexible( child: pw.Text( eticheta.description, textAlign: pw.TextAlign.justify, style: fontStyle ),
+                  ),
+              )),
+            ]
+          )),
+        ]
       );
     }
 
