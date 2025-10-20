@@ -66,13 +66,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   // Default eticheta
-  Eticheta eticheta = Eticheta(autor: "Adi Piorescu",
+  Eticheta eticheta = Eticheta(
+    autor: "Adi Piorescu",
     titlu: 'I sealed myself to find me later',
     marime: '150 X 28 cm',
     description: '''S fi icumin i implic art live, expozi ii, galerie i street art. Mult diversitate, energie creativ i drive social. Vrem s provoc m societatea s î i trezeasc în fiecare zi la via creativitatea; i ce alt mod mai bun de a face asta, dac nu prin produsele care ne îmbrac i arta care ne înconjoar ?''',
     tip: 'Tablou',
     pret: 1500,
-    pretUnit: 'RON'
+    pretUnit: 'RON',
+    instagramAutor: '',
   );
 
   LucrariController controller = LucrariController();

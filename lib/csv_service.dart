@@ -28,14 +28,15 @@ class CsvService {
 
   Lucrare _parseLucrare(List<dynamic> row) {
     return Lucrare(
-        autor: row[0],
-        denumire: row[1],
-        collab: row[2] == 'Collab',
-        locatie: _getLocatie(row),
-        tip: row[6],
-        dimensiune: row[7],
-        descriere: row[8],
-        pret: row[9]
+      autor: row[0],
+      denumire: row[1],
+      collabName: row[2] == 'Collab' ? 'From row' : '',
+      locatie: _getLocatie(row),
+      tip: row[6],
+      dimensiune: row[7],
+      descriere: row[8],
+      pret: row[9],
+      instagramAutor: 'https://www.instagram.com/paraschiv.doru?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
     );
   }
 

@@ -8,8 +8,10 @@ class Eticheta {
   final String tip;
   final int pret;
   final String pretUnit;
+  final String instagramGallery = 'https://www.instagram.com/safiticuminti?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==';
+  final String instagramAutor;
 
-  const Eticheta({required this.autor, required this.titlu, required this.marime, required this.description, required this.tip, required this.pret, required this.pretUnit, });
+  const Eticheta({required this.autor, required this.titlu, required this.marime, required this.description, required this.tip, required this.pret, required this.pretUnit, required this.instagramAutor});
 
   factory Eticheta.fromLucrare(Lucrare lucrare) {
 
@@ -22,7 +24,8 @@ class Eticheta {
       description: 'Săfițicuminți implică artă live, expoziții, galerie și street art. Multă diversitate, energie creativă și drive social. Vrem să provocăm societatea să își trezească în fiecare zi la viață creativitatea; și ce alt mod mai bun de a face asta, dacă nu prin produsele care ne îmbracă și arta care ne înconjoară?',
       tip: lucrare.tip,
       pret: pret,
-      pretUnit: unit
+      pretUnit: unit,
+      instagramAutor: lucrare.instagramAutor,
     );
   }
 
@@ -49,23 +52,27 @@ class Eticheta {
 class Lucrare {
   final String autor;
   final String denumire;
-  final bool collab;
+  final String collabName;
   final String locatie;
   final String tip;
   final String dimensiune;
   final String descriere;
   final String pret;
+  final String instagramAutor;
+  final String instagramColab;
 
-  const Lucrare({required this.autor, required this.denumire, required this.collab, required this.locatie, required this.tip, required this.dimensiune, required this.descriere, required this.pret});
+  const Lucrare({required this.autor, required this.denumire, required this.collabName, required this.locatie, required this.tip, required this.dimensiune, required this.descriere, required this.pret, required this.instagramAutor, this.instagramColab = ''});
 
   Lucrare copyWith({String? d, String? p}) {
     return Lucrare(autor: autor,
-        denumire: denumire,
-        collab: collab,
-        locatie: locatie,
-        tip: tip,
-        dimensiune: d ?? dimensiune,
-        descriere: descriere,
-        pret: p ?? pret);
+      denumire: denumire,
+      collabName: collabName,
+      locatie: locatie,
+      tip: tip,
+      dimensiune: d ?? dimensiune,
+      descriere: descriere,
+      pret: p ?? pret,
+      instagramAutor: instagramAutor,
+    );
   }
 }
