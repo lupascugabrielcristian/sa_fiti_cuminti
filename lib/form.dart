@@ -19,7 +19,7 @@ class Eticheta {
       autor: lucrare.autor,
       titlu: lucrare.denumire,
       marime: lucrare.dimensiune,
-      description: lucrare.descriere,
+      description: 'Săfițicuminți implică artă live, expoziții, galerie și street art. Multă diversitate, energie creativă și drive social. Vrem să provocăm societatea să își trezească în fiecare zi la viață creativitatea; și ce alt mod mai bun de a face asta, dacă nu prin produsele care ne îmbracă și arta care ne înconjoară?',
       tip: lucrare.tip,
       pret: pret,
       pretUnit: unit

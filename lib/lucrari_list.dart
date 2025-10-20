@@ -61,23 +61,23 @@ class _LucrariListState extends State<LucrariList> {
 
   TableRow _buildRow(Lucrare l) {
     return TableRow(
-        children: [
-          Checkbox(value: widget.controller.contains(l), onChanged: (value) {
-            if (value == true) {
-              setState(() {
-                widget.controller.add(l);
-              });
-            } else {
-              setState(() {
-                widget.controller.remove(l);
-              });
-            }
-            widget.onUpdate();
-          }),
-          _buildDataCell(l.autor),
-          _buildDataCell(l.denumire),
-          _buildDataCell(l.tip)
-        ]
+      children: [
+        Checkbox(value: widget.controller.contains(l), onChanged: (value) {
+          if (value == true) {
+            setState(() {
+              widget.controller.add(l);
+            });
+          } else {
+            setState(() {
+              widget.controller.remove(l);
+            });
+          }
+          widget.onUpdate();
+        }),
+        _buildDataCell(l.autor),
+        _buildDataCell(l.denumire),
+        _buildDataCell(l.tip)
+      ]
     );
   }
 

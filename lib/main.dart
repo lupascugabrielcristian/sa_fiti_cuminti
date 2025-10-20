@@ -91,6 +91,18 @@ class _MyHomePageState extends State<MyHomePage> {
     // PdfSyncfusionService().generatePage(eticheta);
   }
 
+  void _pickDefault() {
+    String filePath = '/Users/lolarucker/Downloads/Artisti & lucrari STOMA - Sheet1.csv';
+
+    widget.csvService.readCsvLucrari(filePath).then((l) {
+      setState(() {
+        selected = 0;
+        lucrari = l;
+        eticheta = Eticheta.fromLucrare(l[selected]);
+      });
+    });
+  }
+
   void _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
 
@@ -137,82 +149,90 @@ class _MyHomePageState extends State<MyHomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
 
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: SizedBox(
-                    width: 300,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // PREV & NEXT BUTTONS
-                        Row(
-                          children: [
-
-                            // PREV
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  selected = selected - 1;
-                                  if (selected == -1) selected = lucrari.length - 1;
-                                  eticheta = Eticheta.fromLucrare(lucrari[selected]);
-                                });
-                              },
-                              icon: const Icon(Icons.arrow_back),
-                            ),
-
-                            Text('Lucrare $selected din ${lucrari.length}'),
-
-                            // NEXT
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  selected += 1;
-                                  if (selected == lucrari.length) selected = 0;
-                                  eticheta = Eticheta.fromLucrare(lucrari[selected]);
-                                });
-                              },
-                              icon: const Icon(Icons.arrow_forward),
-                            ),
-                          ],
-                        ),
-
-                        // AUTOR
-                        Text('Autor: ', style: TextStyle(fontSize: 18),),
-                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.autor),),
-
-                        SizedBox(height: 20,),
-
-                        // TITLU
-                        Text('Titlu: ', style: TextStyle(fontSize: 18),),
-                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.titlu),),
-
-                        SizedBox(height: 20,),
-
-                        // MARIME
-                        Text('Marime: ', style: TextStyle(fontSize: 18),),
-                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.marime),),
-
-                        SizedBox(height: 20,),
-
-                        // AN
-                        Text('An: ', style: TextStyle(fontSize: 18),),
-                        TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.an),),
-                      ],
-                    )),
-                ),
-
                 Expanded(
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width * 0.6,
-                    color: Color.fromARGB(205, 238, 238, 208),
-                    child: EtichetaWidget(eticheta: eticheta))
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: SizedBox(
+                      width: 300,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // PREV & NEXT BUTTONS
+                          Row(
+                            children: [
+
+                              // PREV
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    selected = selected - 1;
+                                    if (selected == -1) selected = lucrari.length - 1;
+                                    eticheta = Eticheta.fromLucrare(lucrari[selected]);
+                                  });
+                                },
+                                icon: const Icon(Icons.arrow_back),
+                              ),
+
+                              Text('Lucrare $selected din ${lucrari.length}'),
+
+                              // NEXT
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    selected += 1;
+                                    if (selected == lucrari.length) selected = 0;
+                                    eticheta = Eticheta.fromLucrare(lucrari[selected]);
+                                  });
+                                },
+                                icon: const Icon(Icons.arrow_forward),
+                              ),
+                            ],
+                          ),
+
+                          // AUTOR
+                          Text('Autor: ', style: TextStyle(fontSize: 18),),
+                          TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.autor),),
+
+                          SizedBox(height: 10,),
+
+                          // TITLU
+                          Text('Titlu: ', style: TextStyle(fontSize: 18),),
+                          TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.titlu),),
+
+                          SizedBox(height: 10,),
+
+                          // MARIME
+                          Text('Marime: ', style: TextStyle(fontSize: 18),),
+                          TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.marime),),
+
+                          SizedBox(height: 10,),
+
+                          // AN
+                          Text('An: ', style: TextStyle(fontSize: 18),),
+                          TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.an),),
+
+                          SizedBox(height: 10,),
+
+                          // PRET
+                          Text('Pret: ', style: TextStyle(fontSize: 18),),
+                          TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: lucrari.isNotEmpty ? lucrari[selected].pret : '-'),),
+                        ],
+                      )),
+                  ),
                 ),
+
+                Container(
+                  width: 600,
+                  color: Color.fromARGB(205, 238, 238, 208),
+                  child: EtichetaWidget(eticheta: eticheta)),
 
               ],
             ),
 
+            SizedBox(height: 10,),
+
             if (lucrari.isNotEmpty) SizedBox(
-              height: MediaQuery.sizeOf(context).height - 480,
+              height: MediaQuery.sizeOf(context).height - 490,
               child: SingleChildScrollView(child: LucrariList(
                 lucrari: lucrari,
                 controller: controller,
@@ -233,7 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 // FILE PICKER
                 GestureDetector(
-                  onTap: _pickFile,
+                  onTap: _pickDefault,
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.blue[200],

@@ -60,7 +60,8 @@ class PdfService {
   }
 
   Future<pw.Font> _loadFontBold() async {
-    final ByteData fontData = await rootBundle.load('assets/fonts/LexendDeca-VariableFont_wght.ttf');
+    final ByteData fontData = await rootBundle.load('assets/fonts/Lulo Clean W01 One Bold.otf');
+    // final ByteData fontData = await rootBundle.load('assets/fonts/LexendDeca-VariableFont_wght.ttf');
     // final ByteData fontData = await rootBundle.load('assets/fonts/IBMPlexSans-VariableFont_wdth,wght.ttf');
     final pw.Font ttf = pw.Font.ttf(fontData);
     return ttf;
