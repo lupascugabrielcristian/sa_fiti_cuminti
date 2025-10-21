@@ -1,0 +1,77 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Dart
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the source code
+      - uses: actions/checkout@v4
+    
+      # Step 2: Set up Flutter environment
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable' # or 'beta' if required by your project
+          flutter-version: '3.x.x' # Specify your required Flutter version
+    
+      # Step 3: Get Flutter packages (dependencies)
+      - name: Install Dependencies
+        run: flutter pub get
+    
+      # Step 4: Enable Windows build support (if not already enabled in the project)
+      # This is usually only needed for older projects, but harmless to run.
+      - name: Enable Windows Desktop Support
+        run: flutter config --enable-windows-desktop
+    
+      # Step 5: Build the Windows release executable
+      # This command generates the executable file and all its dependencies
+      - name: Build Windows Executable
+        run: flutter build windows --release
+    
+      # Step 6: Install the MSIX packaging tool (optional, but highly recommended for distribution)
+      # The msix package simplifies creating a proper Windows installer.
+      - name: Install MSIX Packager
+        run: flutter pub global activate msix
+    
+      # Step 7: Create the final MSIX installer
+      # NOTE: This step requires that you have configured the msix_config
+      # section in your project's pubspec.yaml file.
+      - name: Create MSIX Installer Package
+        run: |
+          set PATH=%PATH%;%APPDATA%\Pub\Cache\bin
+          msix:create
+          
+        # Note: If you don't want to use MSIX, skip steps 6 & 7 and use:
+        # run: |
+        #   Compress-Archive -Path 'build/windows/runner/Release/*' -DestinationPath 'release.zip'
+    
+      # Step 8: Upload the resulting installer/artifact
+      - name: Upload Windows MSIX Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          # The path where the MSIX tool typically saves the installer.
+          path: build/windows/installer/*.msix
+          name: windows-app-msix
+    
+      # Step 9: Create a GitHub Release (Optional but useful for distribution)
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/') # Only create release if pushed tag
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/windows/installer/*.msix
+          body: |
+            Automatic Windows release built from CI/CD.
+            
+            This release contains the Windows MSIX installer.
