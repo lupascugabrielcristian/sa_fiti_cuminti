@@ -43,35 +43,38 @@ jobs:
     
       # Step 6: Install the MSIX packaging tool (optional, but highly recommended for distribution)
       # The msix package simplifies creating a proper Windows installer.
-      - name: Install MSIX Packager
-        run: flutter pub global activate msix
+#      - name: Install MSIX Packager
+#        run: flutter pub global activate msix
     
       # Step 7: Create the final MSIX installer
       # NOTE: This step requires that you have configured the msix_config
       # section in your project's pubspec.yaml file.
-      - name: Create MSIX Installer Package
-        run: |
-          set PATH=%PATH%;%APPDATA%\Pub\Cache\bin
-          msix:create
+#      - name: Create MSIX Installer Package
+#        run: |
+#          set PATH=%PATH%;%APPDATA%\Pub\Cache\bin
+#          msix:create
           
         # Note: If you don't want to use MSIX, skip steps 6 & 7 and use:
-        # run: |
-        #   Compress-Archive -Path 'build/windows/runner/Release/*' -DestinationPath 'release.zip'
+      - name: Create zip archive
+        run: Compress-Archive -Path 'build/windows/runner/Release/*' -DestinationPath 'release.zip'
     
       # Step 8: Upload the resulting installer/artifact
       - name: Upload Windows MSIX Artifact
         uses: actions/upload-artifact@v4
         with:
           # The path where the MSIX tool typically saves the installer.
-          path: build/windows/installer/*.msix
-          name: windows-app-msix
+#          path: build/windows/installer/*.msix
+#          name: windows-app-msix
+          path: release.zip
+          name: release
     
       # Step 9: Create a GitHub Release (Optional but useful for distribution)
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/') # Only create release if pushed tag
         uses: softprops/action-gh-release@v1
         with:
-          files: build/windows/installer/*.msix
+#          files: build/windows/installer/*.msix
+          files: release.zip
           body: |
             Automatic Windows release built from CI/CD.
             
