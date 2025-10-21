@@ -282,14 +282,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: _pickDefault,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.blue[200],
+                      color: Colors.blue[400],
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
-                    child: const Text(
-                      'Selecteaza csv',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30),
+                    child: const Text( 'Selecteaza csv', style: TextStyle(color: Colors.white), ),
                   ),
                 ),
 
@@ -303,10 +300,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.purple[200],
+                      color: Colors.purple[400],
                       borderRadius: const BorderRadius.all(Radius.circular(20) ),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
+                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
