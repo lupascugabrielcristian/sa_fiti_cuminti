@@ -24,7 +24,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable' # or 'beta' if required by your project
-          flutter-version: '3.x.x' # Specify your required Flutter version
+          flutter-version: '3.35.6' # Specify your required Flutter version
     
       # Step 3: Get Flutter packages (dependencies)
       - name: Install Dependencies
