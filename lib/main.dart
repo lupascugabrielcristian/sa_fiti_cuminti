@@ -77,6 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
     instagramAutor: '',
   );
 
+  TextEditingController priceController = TextEditingController();
+  TextEditingController titluController = TextEditingController();
   LucrariController controller = LucrariController();
   List<Lucrare> lucrari = [];
   int selected = 0;
@@ -169,6 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   setState(() {
                                     selected = selected - 1;
                                     if (selected == -1) selected = lucrari.length - 1;
+                                    _updateController(lucrari[selected]);
                                     eticheta = Eticheta.fromLucrare(lucrari[selected]);
                                   });
                                 },
@@ -183,10 +186,24 @@ class _MyHomePageState extends State<MyHomePage> {
                                   setState(() {
                                     selected += 1;
                                     if (selected == lucrari.length) selected = 0;
+                                    _updateController(lucrari[selected]);
                                     eticheta = Eticheta.fromLucrare(lucrari[selected]);
                                   });
                                 },
                                 icon: const Icon(Icons.arrow_forward),
+                              ),
+
+                              // Save eticheta changes
+                              GestureDetector(
+                                onTap: () => _saveEtichetaChanges(lucrari[selected]),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[400],
+                                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20),
+                                  child: const Text( 'Save changes', style: TextStyle(color: Colors.white), ),
+                                ),
                               ),
                             ],
                           ),
@@ -199,7 +216,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           // TITLU
                           Text('Titlu: ', style: TextStyle(fontSize: 18),),
-                          TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: eticheta.titlu),),
+                          TextField(
+                            controller: titluController,
+                            maxLines: 1, decoration: InputDecoration.collapsed(hintText: '-'),),
 
                           SizedBox(height: 10,),
 
@@ -217,7 +236,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           // PRET
                           Text('Pret: ', style: TextStyle(fontSize: 18),),
-                          TextField(maxLines: 1, decoration: InputDecoration.collapsed(hintText: lucrari.isNotEmpty ? lucrari[selected].pret : '-'),),
+                          TextField(
+                            controller: priceController,
+                            maxLines: 1,
+                            decoration: InputDecoration.collapsed(hintText: '-'),
+                          ),
+
                         ],
                       )),
                   ),
@@ -317,5 +341,19 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
+  }
+
+  void _updateController(Lucrare lucrare) {
+    setState(() {
+      priceController.text = lucrare.pret;
+      titluController.text = lucrare.denumire;
+    });
+  }
+
+  void _saveEtichetaChanges(Lucrare lucrare) {
+    setState(() {
+      lucrari[selected] = lucrare.copyWith(p: priceController.text, t: titluController.text);
+      eticheta = Eticheta.fromLucrare(lucrari[selected]);
+    });
   }
 }

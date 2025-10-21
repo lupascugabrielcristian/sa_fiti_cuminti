@@ -63,9 +63,9 @@ class Lucrare {
 
   const Lucrare({required this.autor, required this.denumire, required this.collabName, required this.locatie, required this.tip, required this.dimensiune, required this.descriere, required this.pret, required this.instagramAutor, this.instagramColab = ''});
 
-  Lucrare copyWith({String? d, String? p}) {
+  Lucrare copyWith({String? d, String? p, String? t}) {
     return Lucrare(autor: autor,
-      denumire: denumire,
+      denumire: t ?? denumire,
       collabName: collabName,
       locatie: locatie,
       tip: tip,

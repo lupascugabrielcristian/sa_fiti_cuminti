@@ -42,9 +42,9 @@ class _LucrariListState extends State<LucrariList> {
         ),
         Table(
           columnWidths: const {
-            0: FixedColumnWidth(60),
-            1: FlexColumnWidth(1),
-            2: FlexColumnWidth(1),
+            0: FixedColumnWidth(60), // Nume
+            1: FlexColumnWidth(1), // Denumire
+            2: FlexColumnWidth(1), // Tip
             3: FlexColumnWidth(1),
             4: FlexColumnWidth(1),
           },
@@ -76,7 +76,8 @@ class _LucrariListState extends State<LucrariList> {
         }),
         _buildDataCell(l.autor),
         _buildDataCell(l.denumire),
-        _buildDataCell(l.tip)
+        _buildDataCell(l.tip),
+        _buildDataCell(l.pret),
       ]
     );
   }
