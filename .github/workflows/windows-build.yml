@@ -13,11 +13,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       # Step 1: Checkout the source code
-      - uses: actions/checkout@v4
+      - name: Clone repository
+        uses: actions/checkout@v4
     
       # Step 2: Set up Flutter environment
       - name: Set up Flutter
