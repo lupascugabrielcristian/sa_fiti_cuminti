@@ -90,7 +90,10 @@ class _MyHomePageState extends State<MyHomePage> {
         generateBtnText = 'Generate ${controller.size}';
       });
 
-      _showMessageDialog(context, 'Completed', '$files generated');
+      String message = '${files.length} generated\n';
+      message += files.map((x) => x).join('\n');
+
+      _showMessageDialog(context, 'Completed', message);
     });
     // PdfSyncfusionService().generatePage(eticheta);
   }
@@ -279,7 +282,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 // FILE PICKER
                 GestureDetector(
-                  onTap: _pickDefault,
+                  onTap: _pickFile,
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.blue[400],

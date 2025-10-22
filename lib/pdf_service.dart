@@ -36,19 +36,22 @@ class PdfService {
   final double FONT_SIZE = 11;
   final double FONT_SIZE_QR = 9;
 
-  Future<int> generateEtichete(List<Eticheta> etichete) async {
+  Future<List<String>> generateEtichete(List<Eticheta> etichete) async {
+
+    List<String> savedPaths = [];
 
     final n = (etichete.length / 4).round();
     for (var i = 0; i < n; i++) {
-      await _generatePage([
+      final savedFile = await _generatePage([
         etichete[4 * i + 0],
         etichete[4 * i + 1],
         etichete[4 * i + 2],
         if (etichete.length > 4 * i + 3) etichete[4 * i + 3],
       ], i);
+      savedPaths.add(savedFile.path);
     }
 
-    return n;
+    return savedPaths;
   }
 
   Future<File> _generatePage(List<Eticheta> etichete, int page) async {
@@ -141,7 +144,7 @@ class PdfService {
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
                             pw.Padding(
-                              padding: pw.EdgeInsets.only(left: 10, top: 5, right: 10),
+                              padding: pw.EdgeInsets.only(left: 10, top: 10, right: 10),
 
                               child: pw.Column(
                                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -165,7 +168,7 @@ class PdfService {
                                 width: FIRST_COL_WIDTH,
                                 decoration: const pw.BoxDecoration(
                                   border: pw.Border(
-                                      top: pw.BorderSide(width: 1.0, color: PdfColors.black)),
+                                      top: pw.BorderSide(width: 0.5, color: PdfColors.black)),
                                 ),
                                 child: pw.Padding(
                                   padding: pw.EdgeInsets.only(top: 20),
@@ -176,7 +179,7 @@ class PdfService {
 
                                       _qrCodeWithText(qr1!, eticheta.autor.toUpperCase(), fontStyleQr),
 
-                                      pw.SizedBox(width: 30),
+                                      pw.SizedBox(width: 50),
 
                                       _qrCodeWithText(qr2!, 'SAFITICUMINTI\NGALLERY', fontStyleQr),
                                     ],
@@ -190,9 +193,9 @@ class PdfService {
 
                 // PRETUL
                 if (eticheta.pret > 0) pw.Positioned(
-                  top: 3,
+                  top: 8,
                   right: 10,
-                  child: pw.Text('${eticheta.pret}\n${eticheta.pretUnit}', style: fontStyle),
+                  child: pw.Text('${eticheta.pret}\n${eticheta.pretUnit}', style: fontStyleBold, textAlign: pw.TextAlign.right),
                 ),
               ]
             ),
@@ -211,8 +214,13 @@ class PdfService {
   }
 
   Future<File> _saveDocument(pw.Document pdf, int page) async {
-    final dir = await getApplicationDocumentsDirectory();
-    log("downloads: $dir");
+    final Directory dir;
+
+    if (Platform.isWindows) {
+      dir = await getDownloadsDirectory() ?? await getApplicationDocumentsDirectory();
+    } else {
+      dir = await getApplicationDocumentsDirectory();
+    }
 
     final file = File('${dir.path}/safiticuminti_$page.pdf');
     return file.writeAsBytes(await pdf.save());
@@ -260,7 +268,7 @@ class PdfService {
           pw.Container(
             width: 70,
             height: 70,
-            margin: pw.EdgeInsets.only(top: 0),
+            margin: pw.EdgeInsets.only(bottom: 10),
             child: _rotatedText( text, fontStyle ),
           ),
         ]

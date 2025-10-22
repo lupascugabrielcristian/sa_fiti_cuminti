@@ -104,11 +104,11 @@ class LucrariController {
   }
 
   void remove(Lucrare l) {
-    selected.removeWhere((x) => x.denumire == l.denumire);
+    selected.removeWhere((x) => x.denumire == l.denumire && x.autor == l.autor);
   }
 
   bool contains(Lucrare l) {
-    return selected.any((x) => x.denumire == l.denumire);
+    return selected.any((x) => x.denumire == l.denumire && x.autor == l.autor);
   }
 
   void addMultiple(List<Lucrare> lucrari) {
