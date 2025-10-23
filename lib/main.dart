@@ -270,6 +270,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     generateBtnText = 'Generate ${controller.size}';
                   });
                 },
+                onShowLucrare: (l) {
+                  setState(() {
+                    // Find selected value
+                    selected = lucrari.indexOf(l);
+
+                    _updateController(lucrari[selected]);
+                    eticheta = Eticheta.fromLucrare(lucrari[selected]);
+                  });
+                },
               ))
             ),
 
@@ -282,7 +291,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 // FILE PICKER
                 GestureDetector(
-                  onTap: _pickFile,
+                  // onTap: _pickFile,
+                  onTap: _pickDefault,
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.blue[400],

@@ -6,8 +6,9 @@ class LucrariList extends StatefulWidget {
   final List<Lucrare> lucrari;
   final LucrariController controller;
   final Function() onUpdate;
+  final Function(Lucrare l) onShowLucrare;
 
-  const LucrariList( {super.key, required this.lucrari, required this.controller, required this.onUpdate});
+  const LucrariList( {super.key, required this.lucrari, required this.controller, required this.onUpdate, required this.onShowLucrare});
 
   @override
   State<LucrariList> createState() => _LucrariListState();
@@ -74,23 +75,26 @@ class _LucrariListState extends State<LucrariList> {
           }
           widget.onUpdate();
         }),
-        _buildDataCell(l.autor),
-        _buildDataCell(l.denumire),
-        _buildDataCell(l.tip),
-        _buildDataCell(l.pret),
+        _buildDataCell(l, l.autor),
+        _buildDataCell(l, l.denumire),
+        _buildDataCell(l, l.tip),
+        _buildDataCell(l, l.pret),
       ]
     );
   }
 
   // Helper function to create a regular data cell style
-  Widget _buildDataCell(String text, {Color? color}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-      // Alternating background color for readability
-      color: color ?? Colors.white,
-      child: Text(
-        text,
-        style: TextStyle(color: Colors.grey.shade800),
+  Widget _buildDataCell(Lucrare l, String text, {Color? color}) {
+    return GestureDetector(
+      onTap: () => widget.onShowLucrare(l),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+        // Alternating background color for readability
+        color: color ?? Colors.white,
+        child: Text(
+          text,
+          style: TextStyle(color: Colors.grey.shade800),
+        ),
       ),
     );
   }

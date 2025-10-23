@@ -35,18 +35,19 @@ class PdfService {
   final double CARD_WIDTH = 450;
   final double FONT_SIZE = 11;
   final double FONT_SIZE_QR = 9;
+  final int ETICHETE_PE_PAGINA = 3;
 
   Future<List<String>> generateEtichete(List<Eticheta> etichete) async {
 
     List<String> savedPaths = [];
 
-    final n = (etichete.length / 4).round();
+    final n = (etichete.length / ETICHETE_PE_PAGINA).ceil();
     for (var i = 0; i < n; i++) {
       final savedFile = await _generatePage([
-        etichete[4 * i + 0],
-        etichete[4 * i + 1],
-        etichete[4 * i + 2],
-        if (etichete.length > 4 * i + 3) etichete[4 * i + 3],
+        if (etichete.length > (ETICHETE_PE_PAGINA * i + 0)) etichete[ETICHETE_PE_PAGINA * i + 0],
+        if (etichete.length > (ETICHETE_PE_PAGINA * i + 1)) etichete[ETICHETE_PE_PAGINA * i + 1],
+        if (etichete.length > (ETICHETE_PE_PAGINA * i + 2)) etichete[ETICHETE_PE_PAGINA * i + 2],
+        if (etichete.length > (ETICHETE_PE_PAGINA * i + 3)) etichete[ETICHETE_PE_PAGINA * i + 3],
       ], i);
       savedPaths.add(savedFile.path);
     }
