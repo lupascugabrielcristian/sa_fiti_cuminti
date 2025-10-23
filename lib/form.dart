@@ -10,6 +10,7 @@ class Eticheta {
   final String pretUnit;
   final String instagramGallery = 'https://www.instagram.com/safiticuminti?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==';
   final String instagramAutor;
+  static int NOT_FOR_SALE = -123;
 
   const Eticheta({required this.autor, required this.titlu, required this.marime, required this.description, required this.tip, required this.pret, required this.pretUnit, required this.instagramAutor});
 
@@ -30,6 +31,10 @@ class Eticheta {
   }
 
   static (int, String) _extractPret(String pretString) {
+    if (pretString.toLowerCase().contains('not') && pretString.toLowerCase().contains('sale')) {
+      return (NOT_FOR_SALE, '');
+    }
+
     final parts = pretString.split(' ');
     if (parts.length >= 2) {
       final p = int.tryParse(parts[0]);

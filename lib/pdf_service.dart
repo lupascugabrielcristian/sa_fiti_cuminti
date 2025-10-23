@@ -120,7 +120,7 @@ class PdfService {
         // ETICHETA PROPRIUZISA
         pw.Container(
           margin: pw.EdgeInsets.symmetric(vertical: 10),
-          height: CARD_HEIGHT,
+          height: _calculate_final_height(eticheta),
           width: CARD_WIDTH,
           decoration: pw.BoxDecoration(
             border: pw.Border.all(
@@ -150,7 +150,10 @@ class PdfService {
                               child: pw.Column(
                                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                                 children: [
-                                  pw.Text(eticheta.autor.toUpperCase(), style: fontStyleBold,),
+                                  pw.SizedBox(
+                                    width: FIRST_COL_WIDTH - 50,
+                                    child: pw.Text(eticheta.autor.toUpperCase(), style: fontStyleBold,),
+                                  ),
 
                                   pw.SizedBox(height: 5),
 
@@ -172,7 +175,7 @@ class PdfService {
                                       top: pw.BorderSide(width: 0.5, color: PdfColors.black)),
                                 ),
                                 child: pw.Padding(
-                                  padding: pw.EdgeInsets.only(top: 20),
+                                  padding: pw.EdgeInsets.only(top: 15),
                                   child: pw.Row(
                                     mainAxisAlignment: pw.MainAxisAlignment.start,
                                     children: [
@@ -193,10 +196,10 @@ class PdfService {
                 ),
 
                 // PRETUL
-                if (eticheta.pret > 0) pw.Positioned(
+                if (eticheta.pret != 0) pw.Positioned(
                   top: 8,
                   right: 10,
-                  child: pw.Text('${eticheta.pret}\n${eticheta.pretUnit}', style: fontStyleBold, textAlign: pw.TextAlign.right),
+                  child: pw.Text(_getPret(eticheta), style: fontStyleBold, textAlign: pw.TextAlign.right),
                 ),
               ]
             ),
@@ -281,6 +284,22 @@ class PdfService {
     return pw.Transform.rotate(
         angle: 1.57079633,
         child: pw.Text(text, style: fontStyle));
+  }
+
+  String _getPret(Eticheta eticheta) {
+    if (eticheta.pret == Eticheta.NOT_FOR_SALE) {
+      return 'NOT\nFOR\nSALE';
+    } else {
+      return '${eticheta.pret}\n${eticheta.pretUnit}';
+    }
+  }
+
+  double _calculate_final_height(Eticheta eticheta) {
+    double finalH = CARD_HEIGHT;
+    if (eticheta.autor.length > 28 ) finalH += 25;
+    if (eticheta.description.length > 55) finalH += 20;
+
+    return finalH;
   }
 
 }
